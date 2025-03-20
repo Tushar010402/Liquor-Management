@@ -15,10 +15,17 @@ import SaasAdminDashboard from './pages/saas-admin/Dashboard';
 // Tenant Admin pages
 import TenantAdminDashboard from './pages/tenant-admin/Dashboard';
 
-// Placeholder components for other pages
-const ManagerDashboard = () => <div>Manager Dashboard</div>;
-const AssistantManagerDashboard = () => <div>Assistant Manager Dashboard</div>;
-const ExecutiveDashboard = () => <div>Executive Dashboard</div>;
+// Manager pages
+import ManagerDashboard from './pages/manager/Dashboard';
+
+// Assistant Manager pages
+import AssistantManagerDashboard from './pages/assistant-manager/Dashboard';
+
+// Executive pages
+import ExecutiveDashboard from './pages/executive/Dashboard';
+import NewSale from './pages/executive/Sales/NewSale';
+import MySales from './pages/executive/Sales/MySales';
+import SingleAdjustment from './pages/executive/Stock/SingleAdjustment';
 const NotFoundPage = () => <div>404 - Page Not Found</div>;
 
 const App: React.FC = () => {
@@ -142,11 +149,11 @@ const App: React.FC = () => {
             <Route element={<ProtectedRoute allowedRoles={['executive']} />}>
               <Route element={<MainLayout />}>
                 <Route path="/executive/dashboard" element={<ExecutiveDashboard />} />
-                <Route path="/executive/new-sale" element={<div>New Sale</div>} />
+                <Route path="/executive/new-sale" element={<NewSale />} />
                 <Route path="/executive/batch-sale" element={<div>Batch Sale Entry</div>} />
-                <Route path="/executive/my-sales" element={<div>View My Sales</div>} />
+                <Route path="/executive/my-sales" element={<MySales />} />
                 <Route path="/executive/draft-sales" element={<div>Draft Sales</div>} />
-                <Route path="/executive/single-adjustment" element={<div>Single Adjustment</div>} />
+                <Route path="/executive/single-adjustment" element={<SingleAdjustment />} />
                 <Route path="/executive/batch-adjustment" element={<div>Batch Adjustment</div>} />
                 <Route path="/executive/my-adjustments" element={<div>View My Adjustments</div>} />
                 <Route path="/executive/create-return" element={<div>Create Return</div>} />
