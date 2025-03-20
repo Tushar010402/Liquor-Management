@@ -1,0 +1,96 @@
+flowchart TD
+    %% Main Flow
+    Login([Login]) --> Dashboard
+
+    %% Dashboard
+    Dashboard[Tenant Admin Dashboard] --> ShopManagement[Shop Management]
+    Dashboard --> TeamManagement[Team Management]
+    Dashboard --> BrandManagement[Brand Management]
+    Dashboard --> SupplierManagement[Supplier Management]
+    Dashboard --> ReportsAnalytics[Reports & Analytics]
+    Dashboard --> Settings[Business Settings]
+    Dashboard --> TaxManagement[Tax Management]
+    Dashboard --> FinancialAccounting[Financial Accounting]
+
+    %% Shop Management Flow
+    ShopManagement --> ShopList[Shop List]
+    ShopList --> AddShop[Add Shop]
+    ShopList --> EditShop[Edit Shop]
+    ShopList --> ViewShopDetails[View Shop Details]
+    ShopList --> DeactivateShop[Deactivate Shop]
+    ViewShopDetails --> ShopPerformance[Shop Performance]
+    ViewShopDetails --> ShopInventory[Shop Inventory]
+    ViewShopDetails --> ShopStaff[Shop Staff]
+
+    %% Team Management Flow
+    TeamManagement --> TeamList[Team List]
+    TeamList --> AddTeamMember[Add Team Member]
+    TeamList --> EditTeamMember[Edit Team Member]
+    TeamList --> AssignShops[Assign to Shops]
+    TeamList --> DeactivateTeamMember[Deactivate Member]
+    TeamList --> ViewPerformance[View Performance]
+    AddTeamMember --> SelectRole[Select Role]
+    SelectRole -->|Manager| AddManager[Add Manager]
+    SelectRole -->|Assistant Manager| AddAsstManager[Add Assistant Manager]
+    SelectRole -->|Executive| AddExecutive[Add Executive]
+    AssignShops --> ShopAssignment[Shop Assignment]
+
+    %% Brand Management Flow
+    BrandManagement --> BrandCatalog[Brand Catalog]
+    BrandCatalog --> AddBrand[Add Brand]
+    BrandCatalog --> EditBrand[Edit Brand]
+    BrandCatalog --> BrandCategories[Brand Categories]
+    BrandCatalog --> BulkPriceUpdate[Bulk Price Update]
+    BrandCategories --> CategoryList[Category List]
+    CategoryList --> AddCategory[Add Category]
+    CategoryList --> EditCategory[Edit Category]
+    CategoryList --> AssignBrands[Assign Brands]
+
+    %% Supplier Management Flow
+    SupplierManagement --> SupplierList[Supplier List]
+    SupplierList --> AddSupplier[Add Supplier]
+    SupplierList --> EditSupplier[Edit Supplier]
+    SupplierList --> ViewSupplierDetails[View Supplier Details]
+    SupplierList --> DeactivateSupplier[Deactivate Supplier]
+    ViewSupplierDetails --> SupplierProducts[Supplier Products]
+    ViewSupplierDetails --> SupplierHistory[Supplier History]
+    ViewSupplierDetails --> SupplierContacts[Supplier Contacts]
+
+    %% Reports & Analytics Flow
+    ReportsAnalytics --> ReportFilters[Report Filters]
+    ReportsAnalytics --> SalesReport[Sales Reports]
+    ReportsAnalytics --> InventoryReport[Inventory Reports]
+    ReportsAnalytics --> TaxReport[Tax Reports]
+    ReportsAnalytics --> ExecutiveReport[Executive Reports]
+    ReportsAnalytics --> ProfitReport[Profit Analysis]
+    ReportsAnalytics --> FinancialStatements[Financial Statements]
+    ReportFilters --> ExportData[Export Data]
+    ExportData --> ExportToExcel[Export to Excel]
+    ExportData --> ExportToCSV[Export to CSV]
+    ExportData --> ExportToPDF[Export to PDF]
+
+    %% Tax Management Flow
+    TaxManagement --> TaxCategories[Tax Categories]
+    TaxManagement --> ProductTaxAssignment[Product Tax Assignment]
+    TaxManagement --> TaxReports[Tax Reports]
+    TaxCategories --> AddTaxCategory[Add Tax Category]
+    TaxCategories --> EditTaxCategory[Edit Tax Category]
+    TaxCategories --> ViewTaxProducts[View Products with Tax]
+
+    %% Financial Accounting Flow
+    FinancialAccounting --> ChartOfAccounts[Chart of Accounts]
+    FinancialAccounting --> GeneralLedger[General Ledger]
+    FinancialAccounting --> ProfitLoss[Profit & Loss]
+    FinancialAccounting --> BalanceSheet[Balance Sheet]
+    FinancialAccounting --> BankReconciliation[Bank Reconciliation]
+    
+    %% Settings Flow
+    Settings --> CompanyProfile[Company Profile]
+    Settings --> ApprovalWorkflows[Approval Workflows]
+    Settings --> PaymentMethods[Payment Methods]
+    Settings --> NotificationSettings[Notification Settings]
+    Settings --> RolePermissions[Role Permissions]
+    Settings --> ImportData[Import Data]
+    ImportData --> ImportProducts[Import Products]
+    ImportData --> ImportSuppliers[Import Suppliers]
+    ImportData --> ImportInventory[Import Inventory]
