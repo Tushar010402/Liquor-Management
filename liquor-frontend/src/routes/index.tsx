@@ -5,11 +5,11 @@ import ForgotPasswordPage from '../pages/auth/ForgotPasswordPage';
 import ResetPasswordPage from '../pages/auth/ResetPasswordPage';
 import ProtectedRoute from '../components/auth/ProtectedRoute';
 import executiveRoutes from './executiveRoutes';
+import saasAdminRoutes from './saasAdminRoutes';
+import tenantAdminRoutes from './tenantAdminRoutes';
+import shopManagerRoutes from './shopManagerRoutes';
 
 // Import other role routes as they are implemented
-// import saasAdminRoutes from './saasAdminRoutes';
-// import tenantAdminRoutes from './tenantAdminRoutes';
-// import managerRoutes from './managerRoutes';
 // import assistantManagerRoutes from './assistantManagerRoutes';
 
 const routes: RouteObject[] = [
@@ -34,10 +34,16 @@ const routes: RouteObject[] = [
   // Executive routes
   ...executiveRoutes,
   
+  // SaaS Admin routes
+  ...saasAdminRoutes,
+  
+  // Tenant Admin routes
+  ...tenantAdminRoutes,
+  
+  // Shop Manager routes
+  ...shopManagerRoutes,
+  
   // Add other role routes as they are implemented
-  // ...saasAdminRoutes,
-  // ...tenantAdminRoutes,
-  // ...managerRoutes,
   // ...assistantManagerRoutes,
   
   // Catch-all route for 404
