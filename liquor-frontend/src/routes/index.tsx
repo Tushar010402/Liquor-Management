@@ -8,9 +8,7 @@ import executiveRoutes from './executiveRoutes';
 import saasAdminRoutes from './saasAdminRoutes';
 import tenantAdminRoutes from './tenantAdminRoutes';
 import shopManagerRoutes from './shopManagerRoutes';
-
-// Import other role routes as they are implemented
-// import assistantManagerRoutes from './assistantManagerRoutes';
+import assistantManagerRoutes from './assistantManagerRoutes';
 
 const routes: RouteObject[] = [
   {
@@ -43,8 +41,8 @@ const routes: RouteObject[] = [
   // Shop Manager routes
   ...shopManagerRoutes,
   
-  // Add other role routes as they are implemented
-  // ...assistantManagerRoutes,
+  // Assistant Manager routes
+  ...assistantManagerRoutes,
   
   // Catch-all route for 404
   {
