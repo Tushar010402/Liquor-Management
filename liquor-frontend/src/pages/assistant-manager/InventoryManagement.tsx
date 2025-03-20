@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Container,
@@ -32,6 +32,8 @@ import {
   TableHead,
   TableRow,
   useTheme,
+  CircularProgress,
+  Alert,
 } from '@mui/material';
 import {
   Search as SearchIcon,
@@ -48,158 +50,12 @@ import {
   SwapHoriz as SwapHorizIcon,
   Download as DownloadIcon,
   Upload as UploadIcon,
+  Refresh as RefreshIcon,
 } from '@mui/icons-material';
 import { DataTable, PageHeader } from '../../components/common';
-import { useTranslations, useFormValidation, useGlobalConfirmDialog } from '../../hooks';
+import { useTranslations, useFormValidation, useGlobalConfirmDialog, useNotification, useAuth } from '../../hooks';
+import { inventoryService, productService, Product, StockAdjustmentRequest, StockTransferRequest } from '../../services/api';
 import * as Yup from 'yup';
-
-// Mock data for inventory
-const mockInventory = [
-  {
-    id: 1,
-    name: 'Jack Daniels Whiskey',
-    category: 'Whiskey',
-    brand: 'Jack Daniels',
-    size: '750ml',
-    price: 2500,
-    cost_price: 2000,
-    stock: 15,
-    threshold: 10,
-    status: 'in_stock',
-  },
-  {
-    id: 2,
-    name: 'Absolut Vodka',
-    category: 'Vodka',
-    brand: 'Absolut',
-    size: '750ml',
-    price: 1800,
-    cost_price: 1500,
-    stock: 8,
-    threshold: 8,
-    status: 'low_stock',
-  },
-  {
-    id: 3,
-    name: 'Corona Beer (6-pack)',
-    category: 'Beer',
-    brand: 'Corona',
-    size: '330ml x 6',
-    price: 600,
-    cost_price: 450,
-    stock: 24,
-    threshold: 12,
-    status: 'in_stock',
-  },
-  {
-    id: 4,
-    name: 'Bacardi Rum',
-    category: 'Rum',
-    brand: 'Bacardi',
-    size: '750ml',
-    price: 1200,
-    cost_price: 950,
-    stock: 12,
-    threshold: 8,
-    status: 'in_stock',
-  },
-  {
-    id: 5,
-    name: 'Johnnie Walker Black Label',
-    category: 'Whiskey',
-    brand: 'Johnnie Walker',
-    size: '750ml',
-    price: 3500,
-    cost_price: 2800,
-    stock: 5,
-    threshold: 6,
-    status: 'low_stock',
-  },
-  {
-    id: 6,
-    name: 'Smirnoff Vodka',
-    category: 'Vodka',
-    brand: 'Smirnoff',
-    size: '750ml',
-    price: 1200,
-    cost_price: 900,
-    stock: 18,
-    threshold: 10,
-    status: 'in_stock',
-  },
-  {
-    id: 7,
-    name: 'Kingfisher Beer (6-pack)',
-    category: 'Beer',
-    brand: 'Kingfisher',
-    size: '330ml x 6',
-    price: 500,
-    cost_price: 380,
-    stock: 36,
-    threshold: 15,
-    status: 'in_stock',
-  },
-  {
-    id: 8,
-    name: 'Old Monk Rum',
-    category: 'Rum',
-    brand: 'Old Monk',
-    size: '750ml',
-    price: 800,
-    cost_price: 600,
-    stock: 3,
-    threshold: 5,
-    status: 'low_stock',
-  },
-  {
-    id: 9,
-    name: 'Blenders Pride Whiskey',
-    category: 'Whiskey',
-    brand: 'Blenders Pride',
-    size: '750ml',
-    price: 1500,
-    cost_price: 1200,
-    stock: 10,
-    threshold: 8,
-    status: 'in_stock',
-  },
-  {
-    id: 10,
-    name: 'Bira White Beer (6-pack)',
-    category: 'Beer',
-    brand: 'Bira',
-    size: '330ml x 6',
-    price: 700,
-    cost_price: 550,
-    stock: 28,
-    threshold: 12,
-    status: 'in_stock',
-  },
-];
-
-// Mock data for categories
-const mockCategories = [
-  { id: 1, name: 'Whiskey' },
-  { id: 2, name: 'Vodka' },
-  { id: 3, name: 'Rum' },
-  { id: 4, name: 'Beer' },
-  { id: 5, name: 'Wine' },
-  { id: 6, name: 'Gin' },
-];
-
-// Mock data for brands
-const mockBrands = [
-  { id: 1, name: 'Jack Daniels', category_id: 1 },
-  { id: 2, name: 'Johnnie Walker', category_id: 1 },
-  { id: 3, name: 'Blenders Pride', category_id: 1 },
-  { id: 4, name: 'Absolut', category_id: 2 },
-  { id: 5, name: 'Smirnoff', category_id: 2 },
-  { id: 6, name: 'Bacardi', category_id: 3 },
-  { id: 7, name: 'Old Monk', category_id: 3 },
-  { id: 8, name: 'Corona', category_id: 4 },
-  { id: 9, name: 'Kingfisher', category_id: 4 },
-  { id: 10, name: 'Bira', category_id: 4 },
-];
 
 // Validation schema for stock adjustment
 const stockAdjustmentSchema = Yup.object({
@@ -226,6 +82,8 @@ const InventoryManagement: React.FC = () => {
   const { common, inventory } = useTranslations();
   const theme = useTheme();
   const { confirm } = useGlobalConfirmDialog();
+  const { showNotification } = useNotification();
+  const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [filterAnchorEl, setFilterAnchorEl] = useState<null | HTMLElement>(null);
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
@@ -234,6 +92,222 @@ const InventoryManagement: React.FC = () => {
   const [openStockTransferDialog, setOpenStockTransferDialog] = useState(false);
   const [actionAnchorEl, setActionAnchorEl] = useState<{ [key: number]: HTMLElement | null }>({});
   const [tabValue, setTabValue] = useState(0);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<{ id: number; name: string }[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedShopId, setSelectedShopId] = useState<number | undefined>(
+    user?.assigned_shops && user.assigned_shops.length > 0 
+      ? parseInt(user.assigned_shops[0].id) 
+      : undefined
+  );
+
+  // Fetch products and categories
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      setError(null);
+      
+      try {
+        // In production environment
+        if (process.env.NODE_ENV === 'production') {
+          // Fetch products
+          const productsData = await inventoryService.getProducts(selectedShopId);
+          setProducts(productsData);
+          
+          // Fetch categories
+          // This would be a separate API call in a real app
+          // For now, we'll extract unique categories from the products
+          const uniqueCategories = Array.from(
+            new Set(productsData.map(product => product.category))
+          ).map(category => ({
+            id: category.toLowerCase().replace(/\s+/g, '_'),
+            name: category,
+          }));
+          
+          setCategories(uniqueCategories);
+        } else {
+          // For development/demo purposes, we'll use mock data
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          
+          // Mock products
+          setProducts([
+            {
+              id: 1,
+              name: 'Jack Daniels Whiskey',
+              category: 'Whiskey',
+              brand: 'Jack Daniels',
+              price: 2500,
+              cost_price: 2000,
+              stock: 15,
+              threshold: 10,
+              barcode: '123456789',
+              status: 'in_stock',
+              created_at: '2023-01-15',
+              updated_at: '2023-01-15',
+              description: '750ml bottle',
+            },
+            {
+              id: 2,
+              name: 'Absolut Vodka',
+              category: 'Vodka',
+              brand: 'Absolut',
+              price: 1800,
+              cost_price: 1500,
+              stock: 8,
+              threshold: 8,
+              barcode: '234567890',
+              status: 'low_stock',
+              created_at: '2023-01-15',
+              updated_at: '2023-01-15',
+              description: '750ml bottle',
+            },
+            {
+              id: 3,
+              name: 'Corona Beer (6-pack)',
+              category: 'Beer',
+              brand: 'Corona',
+              price: 600,
+              cost_price: 450,
+              stock: 24,
+              threshold: 12,
+              barcode: '345678901',
+              status: 'in_stock',
+              created_at: '2023-01-15',
+              updated_at: '2023-01-15',
+              description: '330ml x 6',
+            },
+            {
+              id: 4,
+              name: 'Bacardi Rum',
+              category: 'Rum',
+              brand: 'Bacardi',
+              price: 1200,
+              cost_price: 950,
+              stock: 12,
+              threshold: 8,
+              barcode: '456789012',
+              status: 'in_stock',
+              created_at: '2023-01-15',
+              updated_at: '2023-01-15',
+              description: '750ml bottle',
+            },
+            {
+              id: 5,
+              name: 'Johnnie Walker Black Label',
+              category: 'Whiskey',
+              brand: 'Johnnie Walker',
+              price: 3500,
+              cost_price: 2800,
+              stock: 5,
+              threshold: 6,
+              barcode: '567890123',
+              status: 'low_stock',
+              created_at: '2023-01-15',
+              updated_at: '2023-01-15',
+              description: '750ml bottle',
+            },
+            {
+              id: 6,
+              name: 'Smirnoff Vodka',
+              category: 'Vodka',
+              brand: 'Smirnoff',
+              price: 1200,
+              cost_price: 900,
+              stock: 18,
+              threshold: 10,
+              barcode: '678901234',
+              status: 'in_stock',
+              created_at: '2023-01-15',
+              updated_at: '2023-01-15',
+              description: '750ml bottle',
+            },
+            {
+              id: 7,
+              name: 'Kingfisher Beer (6-pack)',
+              category: 'Beer',
+              brand: 'Kingfisher',
+              price: 500,
+              cost_price: 380,
+              stock: 36,
+              threshold: 15,
+              barcode: '789012345',
+              status: 'in_stock',
+              created_at: '2023-01-15',
+              updated_at: '2023-01-15',
+              description: '330ml x 6',
+            },
+            {
+              id: 8,
+              name: 'Old Monk Rum',
+              category: 'Rum',
+              brand: 'Old Monk',
+              price: 800,
+              cost_price: 600,
+              stock: 3,
+              threshold: 5,
+              barcode: '890123456',
+              status: 'low_stock',
+              created_at: '2023-01-15',
+              updated_at: '2023-01-15',
+              description: '750ml bottle',
+            },
+            {
+              id: 9,
+              name: 'Blenders Pride Whiskey',
+              category: 'Whiskey',
+              brand: 'Blenders Pride',
+              price: 1500,
+              cost_price: 1200,
+              stock: 10,
+              threshold: 8,
+              barcode: '901234567',
+              status: 'in_stock',
+              created_at: '2023-01-15',
+              updated_at: '2023-01-15',
+              description: '750ml bottle',
+            },
+            {
+              id: 10,
+              name: 'Bira White Beer (6-pack)',
+              category: 'Beer',
+              brand: 'Bira',
+              price: 700,
+              cost_price: 550,
+              stock: 28,
+              threshold: 12,
+              barcode: '012345678',
+              status: 'in_stock',
+              created_at: '2023-01-15',
+              updated_at: '2023-01-15',
+              description: '330ml x 6',
+            },
+          ]);
+          
+          // Mock categories
+          setCategories([
+            { id: 1, name: 'Whiskey' },
+            { id: 2, name: 'Vodka' },
+            { id: 3, name: 'Rum' },
+            { id: 4, name: 'Beer' },
+            { id: 5, name: 'Wine' },
+            { id: 6, name: 'Gin' },
+          ]);
+        }
+      } catch (err: any) {
+        console.error('Error fetching inventory data:', err);
+        setError(err.message || 'Failed to fetch inventory data');
+        showNotification({
+          message: 'Failed to fetch inventory data. Please try again later.',
+          variant: 'error',
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [selectedShopId, showNotification]);
 
   // Form validation for stock adjustment
   const stockAdjustmentForm = useFormValidation({
@@ -245,10 +319,62 @@ const InventoryManagement: React.FC = () => {
       notes: '',
     },
     validationSchema: stockAdjustmentSchema,
-    onSubmit: (values) => {
-      console.log('Stock adjustment submitted:', values);
-      // In a real app, you would make an API call to adjust the stock
-      handleCloseStockAdjustmentDialog();
+    onSubmit: async (values) => {
+      try {
+        const adjustmentData: StockAdjustmentRequest = {
+          product_id: Number(values.product_id),
+          adjustment_type: values.adjustment_type as 'increase' | 'decrease',
+          quantity: Number(values.quantity),
+          reason: values.reason,
+          notes: values.notes,
+        };
+        
+        if (process.env.NODE_ENV === 'production') {
+          // Make API call to adjust stock
+          const updatedProduct = await inventoryService.adjustStock(adjustmentData);
+          
+          // Update the product in the local state
+          setProducts(prevProducts => 
+            prevProducts.map(product => 
+              product.id === updatedProduct.id ? updatedProduct : product
+            )
+          );
+        } else {
+          // For development/demo purposes
+          await new Promise(resolve => setTimeout(resolve, 500));
+          
+          // Update the product in the local state
+          setProducts(prevProducts => 
+            prevProducts.map(product => {
+              if (product.id === Number(values.product_id)) {
+                const newStock = values.adjustment_type === 'increase'
+                  ? product.stock + Number(values.quantity)
+                  : product.stock - Number(values.quantity);
+                
+                return {
+                  ...product,
+                  stock: newStock,
+                  status: newStock <= 0 ? 'out_of_stock' : newStock <= product.threshold ? 'low_stock' : 'in_stock',
+                };
+              }
+              return product;
+            })
+          );
+        }
+        
+        showNotification({
+          message: `Stock adjustment submitted successfully`,
+          variant: 'success',
+        });
+        
+        handleCloseStockAdjustmentDialog();
+      } catch (err: any) {
+        console.error('Error adjusting stock:', err);
+        showNotification({
+          message: err.message || 'Failed to adjust stock',
+          variant: 'error',
+        });
+      }
     },
   });
 
@@ -256,16 +382,63 @@ const InventoryManagement: React.FC = () => {
   const stockTransferForm = useFormValidation({
     initialValues: {
       product_id: '',
-      from_shop_id: '',
+      from_shop_id: selectedShopId?.toString() || '',
       to_shop_id: '',
       quantity: '',
       notes: '',
     },
     validationSchema: stockTransferSchema,
-    onSubmit: (values) => {
-      console.log('Stock transfer submitted:', values);
-      // In a real app, you would make an API call to transfer the stock
-      handleCloseStockTransferDialog();
+    onSubmit: async (values) => {
+      try {
+        const transferData: StockTransferRequest = {
+          product_id: Number(values.product_id),
+          from_shop_id: Number(values.from_shop_id),
+          to_shop_id: Number(values.to_shop_id),
+          quantity: Number(values.quantity),
+          notes: values.notes,
+        };
+        
+        if (process.env.NODE_ENV === 'production') {
+          // Make API call to transfer stock
+          await inventoryService.transferStock(transferData);
+          
+          // Refresh products to get updated stock levels
+          const updatedProducts = await inventoryService.getProducts(selectedShopId);
+          setProducts(updatedProducts);
+        } else {
+          // For development/demo purposes
+          await new Promise(resolve => setTimeout(resolve, 500));
+          
+          // Update the product in the local state
+          setProducts(prevProducts => 
+            prevProducts.map(product => {
+              if (product.id === Number(values.product_id)) {
+                const newStock = product.stock - Number(values.quantity);
+                
+                return {
+                  ...product,
+                  stock: newStock,
+                  status: newStock <= 0 ? 'out_of_stock' : newStock <= product.threshold ? 'low_stock' : 'in_stock',
+                };
+              }
+              return product;
+            })
+          );
+        }
+        
+        showNotification({
+          message: `Stock transfer submitted successfully`,
+          variant: 'success',
+        });
+        
+        handleCloseStockTransferDialog();
+      } catch (err: any) {
+        console.error('Error transferring stock:', err);
+        showNotification({
+          message: err.message || 'Failed to transfer stock',
+          variant: 'error',
+        });
+      }
     },
   });
 
@@ -290,7 +463,7 @@ const InventoryManagement: React.FC = () => {
   };
 
   // Handle opening the stock adjustment dialog
-  const handleOpenStockAdjustmentDialog = (product?: any) => {
+  const handleOpenStockAdjustmentDialog = (product?: Product) => {
     if (product) {
       stockAdjustmentForm.formik.setFieldValue('product_id', product.id);
     }
@@ -304,7 +477,7 @@ const InventoryManagement: React.FC = () => {
   };
 
   // Handle opening the stock transfer dialog
-  const handleOpenStockTransferDialog = (product?: any) => {
+  const handleOpenStockTransferDialog = (product?: Product) => {
     if (product) {
       stockTransferForm.formik.setFieldValue('product_id', product.id);
     }
@@ -320,10 +493,55 @@ const InventoryManagement: React.FC = () => {
   // Handle tab change
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
+    
+    // Set status filter based on tab
+    switch (newValue) {
+      case 0: // All
+        setStatusFilter('all');
+        break;
+      case 1: // Low Stock
+        setStatusFilter('low_stock');
+        break;
+      case 2: // Out of Stock
+        setStatusFilter('out_of_stock');
+        break;
+      default:
+        setStatusFilter('all');
+    }
+  };
+
+  // Refresh inventory data
+  const handleRefreshInventory = async () => {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      if (process.env.NODE_ENV === 'production') {
+        const productsData = await inventoryService.getProducts(selectedShopId);
+        setProducts(productsData);
+      } else {
+        // For development/demo purposes
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+      
+      showNotification({
+        message: 'Inventory data refreshed successfully',
+        variant: 'success',
+      });
+    } catch (err: any) {
+      console.error('Error refreshing inventory data:', err);
+      setError(err.message || 'Failed to refresh inventory data');
+      showNotification({
+        message: 'Failed to refresh inventory data. Please try again later.',
+        variant: 'error',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Filter inventory based on search query and filters
-  const filteredInventory = mockInventory.filter((product) => {
+  const filteredInventory = products.filter((product) => {
     const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       product.brand.toLowerCase().includes(searchQuery.toLowerCase());
     
@@ -481,6 +699,7 @@ const InventoryManagement: React.FC = () => {
             textColor="primary"
             variant="fullWidth"
             aria-label="inventory tabs"
+            disabled={isLoading}
           >
             <Tab label={common('all')} />
             <Tab label={inventory('lowStock')} />
@@ -502,6 +721,7 @@ const InventoryManagement: React.FC = () => {
                   ),
                 }}
                 size="small"
+                disabled={isLoading}
               />
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
@@ -511,6 +731,7 @@ const InventoryManagement: React.FC = () => {
                   startIcon={<FilterListIcon />}
                   onClick={handleFilterClick}
                   size="small"
+                  disabled={isLoading}
                 >
                   {common('filter')}
                 </Button>
@@ -531,7 +752,7 @@ const InventoryManagement: React.FC = () => {
                   >
                     {common('all')}
                   </MenuItem>
-                  {mockCategories.map((category) => (
+                  {categories.map((category) => (
                     <MenuItem
                       key={category.id}
                       onClick={() => {
@@ -584,6 +805,15 @@ const InventoryManagement: React.FC = () => {
                     {inventory('outOfStock')}
                   </MenuItem>
                 </Menu>
+                <Button
+                  variant="outlined"
+                  startIcon={<RefreshIcon />}
+                  onClick={handleRefreshInventory}
+                  size="small"
+                  disabled={isLoading}
+                >
+                  {common('refresh')}
+                </Button>
               </Box>
             </Grid>
             <Grid item xs={12} sm={12} md={4} sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
@@ -591,7 +821,18 @@ const InventoryManagement: React.FC = () => {
                 variant="outlined"
                 color="primary"
                 startIcon={<DownloadIcon />}
-                onClick={() => console.log('Export inventory')}
+                onClick={() => {
+                  if (process.env.NODE_ENV === 'production') {
+                    // In a real app, this would trigger a file download
+                    productService.exportProducts(selectedShopId);
+                  } else {
+                    showNotification({
+                      message: 'Export functionality is not available in demo mode',
+                      variant: 'info',
+                    });
+                  }
+                }}
+                disabled={isLoading}
               >
                 {common('export')}
               </Button>
@@ -600,6 +841,7 @@ const InventoryManagement: React.FC = () => {
                 color="primary"
                 startIcon={<InventoryIcon />}
                 onClick={() => handleOpenStockAdjustmentDialog()}
+                disabled={isLoading}
               >
                 {inventory('adjustStock')}
               </Button>
@@ -608,6 +850,7 @@ const InventoryManagement: React.FC = () => {
                 color="primary"
                 startIcon={<SwapHorizIcon />}
                 onClick={() => handleOpenStockTransferDialog()}
+                disabled={isLoading}
               >
                 {inventory('transferStock')}
               </Button>
@@ -616,14 +859,79 @@ const InventoryManagement: React.FC = () => {
         </CardContent>
       </Card>
 
-      <DataTable
-        columns={columns}
-        data={filteredInventory}
-        keyField="id"
-        pagination
-        paginationPerPage={10}
-        paginationTotalRows={filteredInventory.length}
-      />
+      {isLoading ? (
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 5 }}>
+          <CircularProgress />
+          <Typography variant="body1" sx={{ ml: 2 }}>
+            {common('loading')}
+          </Typography>
+        </Box>
+      ) : error ? (
+        <Card>
+          <CardContent>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 3 }}>
+              <Typography variant="h6" color="error" gutterBottom>
+                {error}
+              </Typography>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleRefreshInventory}
+                sx={{ mt: 2 }}
+              >
+                {common('retry')}
+              </Button>
+            </Box>
+          </CardContent>
+        </Card>
+      ) : filteredInventory.length === 0 ? (
+        <Card>
+          <CardContent>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 3 }}>
+              <Typography variant="h6" gutterBottom>
+                {inventory('noProductsFound')}
+              </Typography>
+              <Typography variant="body2" color="textSecondary" align="center" sx={{ mb: 2 }}>
+                {searchQuery || categoryFilter !== 'all' || statusFilter !== 'all'
+                  ? inventory('noProductsMatchFilter')
+                  : inventory('noProductsYet')}
+              </Typography>
+              {searchQuery || categoryFilter !== 'all' || statusFilter !== 'all' ? (
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={() => {
+                    setSearchQuery('');
+                    setCategoryFilter('all');
+                    setStatusFilter('all');
+                    setTabValue(0);
+                  }}
+                >
+                  {common('clearFilters')}
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<RefreshIcon />}
+                  onClick={handleRefreshInventory}
+                >
+                  {common('refresh')}
+                </Button>
+              )}
+            </Box>
+          </CardContent>
+        </Card>
+      ) : (
+        <DataTable
+          columns={columns}
+          data={filteredInventory}
+          keyField="id"
+          pagination
+          paginationPerPage={10}
+          paginationTotalRows={filteredInventory.length}
+        />
+      )}
 
       {/* Stock Adjustment Dialog */}
       <Dialog open={openStockAdjustmentDialog} onClose={handleCloseStockAdjustmentDialog} maxWidth="sm" fullWidth>
