@@ -7,9 +7,12 @@ import AuthProvider from './contexts/AuthContext';
 import { store, useAppDispatch } from './store';
 import { loadPreferencesFromStorage } from './store/slices/userPreferencesSlice';
 import routes from './routes';
-import Notifications from './components/common/Notifications';
-import GlobalLoader from './components/common/GlobalLoader';
-import { GlobalConfirmDialogProvider } from './components/common/GlobalConfirmDialog';
+import { 
+  Notifications, 
+  GlobalLoader, 
+  GlobalConfirmDialogProvider,
+  ErrorBoundary
+} from './components/common';
 
 // App Router component that uses the routes configuration
 const AppRouter = () => {
@@ -33,7 +36,9 @@ const AppContent = () => {
           <CssBaseline />
           <GlobalLoader />
           <Notifications />
-          <AppRouter />
+          <ErrorBoundary>
+            <AppRouter />
+          </ErrorBoundary>
         </GlobalConfirmDialogProvider>
       </AuthProvider>
     </Router>
@@ -42,11 +47,13 @@ const AppContent = () => {
 
 const App: React.FC = () => {
   return (
-    <Provider store={store}>
-      <ThemeProvider>
-        <AppContent />
-      </ThemeProvider>
-    </Provider>
+    <ErrorBoundary>
+      <Provider store={store}>
+        <ThemeProvider>
+          <AppContent />
+        </ThemeProvider>
+      </Provider>
+    </ErrorBoundary>
   );
 };
 

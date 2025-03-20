@@ -3,6 +3,7 @@ export { default as ChartCard } from './ChartCard';
 export { default as ConfirmDialog } from './ConfirmDialog';
 export { default as DataTable } from './DataTable';
 export { default as EmptyState } from './EmptyState';
+export { default as ErrorBoundary } from './ErrorBoundary';
 export { default as FormLayout } from './FormLayout';
 export { default as GlobalLoader } from './GlobalLoader';
 export { 
