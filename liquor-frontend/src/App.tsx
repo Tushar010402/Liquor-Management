@@ -26,6 +26,10 @@ import ExecutiveDashboard from './pages/executive/Dashboard';
 import NewSale from './pages/executive/Sales/NewSale';
 import MySales from './pages/executive/Sales/MySales';
 import SingleAdjustment from './pages/executive/Stock/SingleAdjustment';
+import CashBalance from './pages/executive/Cash/CashBalance';
+import RecordDeposit from './pages/executive/Cash/RecordDeposit';
+import RecordExpense from './pages/executive/Cash/RecordExpense';
+import DailySummary from './pages/executive/Cash/DailySummary';
 const NotFoundPage = () => <div>404 - Page Not Found</div>;
 
 const App: React.FC = () => {
@@ -158,11 +162,11 @@ const App: React.FC = () => {
                 <Route path="/executive/my-adjustments" element={<div>View My Adjustments</div>} />
                 <Route path="/executive/create-return" element={<div>Create Return</div>} />
                 <Route path="/executive/my-returns" element={<div>View My Returns</div>} />
-                <Route path="/executive/cash-balance" element={<div>Cash Balance</div>} />
-                <Route path="/executive/record-deposit" element={<div>Record Bank Deposit</div>} />
-                <Route path="/executive/record-expense" element={<div>Record Expense</div>} />
+                <Route path="/executive/cash-balance" element={<CashBalance />} />
+                <Route path="/executive/record-deposit" element={<RecordDeposit />} />
+                <Route path="/executive/record-expense" element={<RecordExpense />} />
                 <Route path="/executive/cash-history" element={<div>Cash History</div>} />
-                <Route path="/executive/today-summary" element={<div>Today's Summary</div>} />
+                <Route path="/executive/today-summary" element={<DailySummary />} />
                 <Route path="/executive/payment-breakdown" element={<div>Payment Breakdown</div>} />
                 <Route path="/executive/brand-sales" element={<div>Brand-wise Sales</div>} />
                 <Route path="/executive/pending-approvals" element={<div>Pending Items</div>} />
