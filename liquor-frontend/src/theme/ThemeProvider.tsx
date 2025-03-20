@@ -1,14 +1,17 @@
-import React, { createContext, useState, useMemo, ReactNode } from 'react';
-import { ThemeProvider as MuiThemeProvider, CssBaseline } from '@mui/material';
-import { SnackbarProvider } from 'notistack';
-import theme from './theme';
+import React, { createContext, useEffect, useMemo, ReactNode } from 'react';
+import { ThemeProvider as MuiThemeProvider } from '@mui/material';
+import { useAppDispatch, useAppSelector } from '../store';
+import { setThemeMode } from '../store/slices/userPreferencesSlice';
+import { getTheme, ThemeMode } from './index';
 
 type ThemeContextType = {
   toggleColorMode: () => void;
+  setMode: (mode: ThemeMode) => void;
 };
 
 export const ThemeContext = createContext<ThemeContextType>({
   toggleColorMode: () => {},
+  setMode: () => {},
 });
 
 interface ThemeProviderProps {
@@ -16,34 +19,48 @@ interface ThemeProviderProps {
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [mode, setMode] = useState<'light' | 'dark'>('light');
+  const dispatch = useAppDispatch();
+  const { themeMode } = useAppSelector((state) => state.userPreferences);
 
+  // Listen for system theme changes
+  useEffect(() => {
+    if (themeMode === 'system') {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      
+      const handleChange = () => {
+        // Force a re-render when system theme changes
+        dispatch(setThemeMode('system'));
+      };
+      
+      mediaQuery.addEventListener('change', handleChange);
+      
+      return () => {
+        mediaQuery.removeEventListener('change', handleChange);
+      };
+    }
+  }, [themeMode, dispatch]);
+
+  // Create theme context value
   const colorMode = useMemo(
     () => ({
       toggleColorMode: () => {
-        setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+        const newMode = themeMode === 'light' ? 'dark' : 'light';
+        dispatch(setThemeMode(newMode));
+      },
+      setMode: (mode: ThemeMode) => {
+        dispatch(setThemeMode(mode));
       },
     }),
-    []
+    [themeMode, dispatch]
   );
 
-  // For now, we're only using the light theme
-  // In the future, we can implement dark mode by creating a darkTheme
+  // Get the current theme
+  const theme = useMemo(() => getTheme(themeMode), [themeMode]);
 
   return (
     <ThemeContext.Provider value={colorMode}>
       <MuiThemeProvider theme={theme}>
-        <CssBaseline />
-        <SnackbarProvider
-          maxSnack={3}
-          anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-          }}
-          autoHideDuration={5000}
-        >
-          {children}
-        </SnackbarProvider>
+        {children}
       </MuiThemeProvider>
     </ThemeContext.Provider>
   );

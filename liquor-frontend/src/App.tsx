@@ -33,7 +33,6 @@ const AppContent = () => {
     <Router>
       <AuthProvider>
         <GlobalConfirmDialogProvider>
-          <CssBaseline />
           <GlobalLoader />
           <Notifications />
           <ErrorBoundary>
@@ -50,6 +49,7 @@ const App: React.FC = () => {
     <ErrorBoundary>
       <Provider store={store}>
         <ThemeProvider>
+          <CssBaseline />
           <AppContent />
         </ThemeProvider>
       </Provider>

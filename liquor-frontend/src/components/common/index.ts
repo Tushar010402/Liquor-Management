@@ -16,3 +16,4 @@ export { default as PageHeader } from './PageHeader';
 export { default as PermissionGuard } from './PermissionGuard';
 export { default as ShopGuard } from './ShopGuard';
 export { default as StatCard } from './StatCard';
+export { default as ThemeSwitcher } from './ThemeSwitcher';
