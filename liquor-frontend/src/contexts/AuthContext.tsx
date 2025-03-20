@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { authService } from '../services';
 
 // Define user roles
 export type UserRole = 'saas_admin' | 'tenant_admin' | 'manager' | 'assistant_manager' | 'executive';
@@ -51,8 +52,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       try {
         const token = localStorage.getItem('token');
         if (token) {
-          // In a real app, you would validate the token with the backend
-          // For now, we'll just check if it exists and parse the user data
+          // For development/demo purposes, we'll keep the mock validation
+          // In production, this would be replaced with the API call
+          
+          // Uncomment the following lines to use the real API in production
+          // try {
+          //   const { user: userData } = await authService.validateToken();
+          //   setUser(userData);
+          // } catch (err) {
+          //   // Token is invalid or expired
+          //   localStorage.removeItem('token');
+          //   localStorage.removeItem('user');
+          //   setUser(null);
+          // }
+          
+          // Mock validation for development/demo
           const userData = localStorage.getItem('user');
           if (userData) {
             setUser(JSON.parse(userData));
@@ -76,10 +90,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setError(null);
     
     try {
-      // In a real app, you would make an API call to authenticate
-      // For now, we'll simulate a successful login with mock data
+      // For development/demo purposes, we'll keep the mock login
+      // In production, this would be replaced with the API call
       
-      // Simulate API call delay
+      // Uncomment the following line to use the real API in production
+      // const { user: userData, token } = await authService.login({ email, password });
+      
+      // Mock login for development/demo
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       // Mock different user roles based on email prefix
@@ -142,7 +159,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
       
       // Store token and user data
-      const mockToken = 'mock-jwt-token';
+      const mockToken = 'mock-jwt-token-' + Math.random().toString(36).substring(2);
       localStorage.setItem('token', mockToken);
       localStorage.setItem('user', JSON.stringify(mockUser));
       
@@ -168,20 +185,36 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         default:
           navigate('/dashboard');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Login error:', err);
-      setError('Invalid email or password');
+      setError(err.response?.data?.message || 'Invalid email or password');
     } finally {
       setIsLoading(false);
     }
   };
 
   // Logout function
-  const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    setUser(null);
-    navigate('/login');
+  const logout = async () => {
+    try {
+      // For development/demo purposes, we'll keep the mock logout
+      // In production, this would be replaced with the API call
+      
+      // Uncomment the following line to use the real API in production
+      // await authService.logout();
+      
+      // Clear local storage and state
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      setUser(null);
+      navigate('/login');
+    } catch (err) {
+      console.error('Logout error:', err);
+      // Even if the API call fails, we still want to log out locally
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      setUser(null);
+      navigate('/login');
+    }
   };
 
   return (

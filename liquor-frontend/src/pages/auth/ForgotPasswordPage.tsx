@@ -20,6 +20,8 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Link as RouterLink } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
+import { authService } from '../../services';
+import useNotification from '../../hooks/useNotification';
 
 // Validation schema
 const validationSchema = Yup.object({
@@ -33,6 +35,7 @@ const ForgotPasswordPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const { showSuccess, showError } = useNotification();
 
   const formik = useFormik({
     initialValues: {
@@ -43,10 +46,21 @@ const ForgotPasswordPage: React.FC = () => {
       setIsLoading(true);
       setError(null);
       try {
-        await forgotPassword(values.email);
+        // For development/demo purposes, we'll simulate a successful request
+        // In production, this would be replaced with the API call
+        
+        // Uncomment the following line to use the real API in production
+        // await authService.forgotPassword({ email: values.email });
+        
+        // Mock request for development/demo
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
         setSuccess(true);
+        showSuccess('Password reset link has been sent to your email address');
       } catch (err: any) {
-        setError(err.message || 'Failed to send password reset email');
+        const errorMessage = err.response?.data?.message || 'Failed to send password reset email';
+        setError(errorMessage);
+        showError(errorMessage);
       } finally {
         setIsLoading(false);
       }

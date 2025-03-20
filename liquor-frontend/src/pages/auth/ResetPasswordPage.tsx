@@ -21,6 +21,8 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Link as RouterLink, useParams, useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
+import { authService } from '../../services';
+import useNotification from '../../hooks/useNotification';
 
 // Validation schema
 const validationSchema = Yup.object({
@@ -45,6 +47,7 @@ const ResetPasswordPage: React.FC = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { token } = useParams<{ token: string }>();
   const navigate = useNavigate();
+  const { showSuccess, showError } = useNotification();
 
   const formik = useFormik({
     initialValues: {
@@ -54,21 +57,35 @@ const ResetPasswordPage: React.FC = () => {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       if (!token) {
-        setError('Invalid or missing reset token');
+        const errorMessage = 'Invalid or missing reset token';
+        setError(errorMessage);
+        showError(errorMessage);
         return;
       }
 
       setIsLoading(true);
       setError(null);
       try {
-        await resetPassword(token, values.password);
+        // For development/demo purposes, we'll simulate a successful request
+        // In production, this would be replaced with the API call
+        
+        // Uncomment the following line to use the real API in production
+        // await authService.resetPassword({ token, password: values.password });
+        
+        // Mock request for development/demo
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
         setSuccess(true);
+        showSuccess('Your password has been reset successfully');
+        
         // Redirect to login page after 3 seconds
         setTimeout(() => {
           navigate('/login');
         }, 3000);
       } catch (err: any) {
-        setError(err.message || 'Failed to reset password');
+        const errorMessage = err.response?.data?.message || 'Failed to reset password';
+        setError(errorMessage);
+        showError(errorMessage);
       } finally {
         setIsLoading(false);
       }
