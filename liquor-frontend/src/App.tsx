@@ -9,6 +9,7 @@ import { loadPreferencesFromStorage } from './store/slices/userPreferencesSlice'
 import routes from './routes';
 import Notifications from './components/common/Notifications';
 import GlobalLoader from './components/common/GlobalLoader';
+import { GlobalConfirmDialogProvider } from './components/common/GlobalConfirmDialog';
 
 // App Router component that uses the routes configuration
 const AppRouter = () => {
@@ -28,10 +29,12 @@ const AppContent = () => {
   return (
     <Router>
       <AuthProvider>
-        <CssBaseline />
-        <GlobalLoader />
-        <Notifications />
-        <AppRouter />
+        <GlobalConfirmDialogProvider>
+          <CssBaseline />
+          <GlobalLoader />
+          <Notifications />
+          <AppRouter />
+        </GlobalConfirmDialogProvider>
       </AuthProvider>
     </Router>
   );
