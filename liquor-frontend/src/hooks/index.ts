@@ -7,6 +7,7 @@ export { default as useLoading } from './useLoading';
 export { default as useNotification } from './useNotification';
 export { default as usePermissions } from './usePermissions';
 export { default as useTableData } from './useTableData';
+export { default as useTranslations } from './useTranslations';
 
 // Re-export types
 export * from './useTableData';

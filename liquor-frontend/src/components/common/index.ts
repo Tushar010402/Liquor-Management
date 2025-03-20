@@ -10,6 +10,7 @@ export {
   default as GlobalConfirmDialogProvider,
   useGlobalConfirmDialog
 } from './GlobalConfirmDialog';
+export { default as LanguageSwitcher } from './LanguageSwitcher';
 export { default as Notifications } from './Notifications';
 export { default as PageHeader } from './PageHeader';
 export { default as PermissionGuard } from './PermissionGuard';
