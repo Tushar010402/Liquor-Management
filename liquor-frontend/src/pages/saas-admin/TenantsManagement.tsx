@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Container,
@@ -25,6 +25,7 @@ import {
   Tab,
   Divider,
   useTheme,
+  CircularProgress,
 } from '@mui/material';
 import {
   Search as SearchIcon,
@@ -41,100 +42,9 @@ import {
   AttachMoney as MoneyIcon,
 } from '@mui/icons-material';
 import { DataTable, PageHeader } from '../../components/common';
-import { useTranslations, useFormValidation, useGlobalConfirmDialog } from '../../hooks';
+import { useTranslations, useFormValidation, useGlobalConfirmDialog, useNotification } from '../../hooks';
+import { tenantService, Tenant } from '../../services/api';
 import * as Yup from 'yup';
-
-// Mock data for tenants
-const mockTenants = [
-  {
-    id: 1,
-    name: 'ABC Liquors',
-    email: 'admin@abcliquors.com',
-    plan: 'Premium',
-    status: 'active',
-    shops: 5,
-    users: 25,
-    created_at: '2023-01-15',
-    subscription_ends: '2024-01-15',
-  },
-  {
-    id: 2,
-    name: 'XYZ Wines',
-    email: 'admin@xyzwines.com',
-    plan: 'Standard',
-    status: 'active',
-    shops: 3,
-    users: 15,
-    created_at: '2023-02-20',
-    subscription_ends: '2024-02-20',
-  },
-  {
-    id: 3,
-    name: 'City Spirits',
-    email: 'admin@cityspirits.com',
-    plan: 'Basic',
-    status: 'active',
-    shops: 2,
-    users: 10,
-    created_at: '2023-03-10',
-    subscription_ends: '2024-03-10',
-  },
-  {
-    id: 4,
-    name: 'Metro Beverages',
-    email: 'admin@metrobeverages.com',
-    plan: 'Premium',
-    status: 'active',
-    shops: 4,
-    users: 20,
-    created_at: '2023-04-05',
-    subscription_ends: '2024-04-05',
-  },
-  {
-    id: 5,
-    name: 'Downtown Drinks',
-    email: 'admin@downtowndrinks.com',
-    plan: 'Basic',
-    status: 'inactive',
-    shops: 1,
-    users: 5,
-    created_at: '2023-05-15',
-    subscription_ends: '2023-11-15',
-  },
-  {
-    id: 6,
-    name: 'Uptown Liquors',
-    email: 'admin@uptownliquors.com',
-    plan: 'Standard',
-    status: 'active',
-    shops: 2,
-    users: 12,
-    created_at: '2023-06-20',
-    subscription_ends: '2024-06-20',
-  },
-  {
-    id: 7,
-    name: 'Coastal Wines',
-    email: 'admin@coastalwines.com',
-    plan: 'Premium',
-    status: 'active',
-    shops: 3,
-    users: 18,
-    created_at: '2023-07-10',
-    subscription_ends: '2024-07-10',
-  },
-  {
-    id: 8,
-    name: 'Highland Spirits',
-    email: 'admin@highlandspirits.com',
-    plan: 'Basic',
-    status: 'inactive',
-    shops: 1,
-    users: 6,
-    created_at: '2023-08-05',
-    subscription_ends: '2023-11-05',
-  },
-];
 
 // Validation schema for tenant form
 const tenantValidationSchema = Yup.object({
@@ -162,14 +72,138 @@ const TenantsManagement: React.FC = () => {
   const { common, tenants } = useTranslations();
   const theme = useTheme();
   const { confirm } = useGlobalConfirmDialog();
+  const { showNotification } = useNotification();
   const [searchQuery, setSearchQuery] = useState('');
   const [filterAnchorEl, setFilterAnchorEl] = useState<null | HTMLElement>(null);
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [planFilter, setPlanFilter] = useState<string>('all');
   const [openTenantDialog, setOpenTenantDialog] = useState(false);
-  const [selectedTenant, setSelectedTenant] = useState<any | null>(null);
+  const [selectedTenant, setSelectedTenant] = useState<Tenant | null>(null);
   const [actionAnchorEl, setActionAnchorEl] = useState<{ [key: number]: HTMLElement | null }>({});
   const [tabValue, setTabValue] = useState(0);
+  const [tenantsData, setTenantsData] = useState<Tenant[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch tenants data
+  useEffect(() => {
+    const fetchTenants = async () => {
+      setIsLoading(true);
+      setError(null);
+      
+      try {
+        // In production environment
+        if (process.env.NODE_ENV === 'production') {
+          const data = await tenantService.getTenants();
+          setTenantsData(data);
+        } else {
+          // For development/demo purposes, we'll use mock data
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          setTenantsData([
+            {
+              id: 1,
+              name: 'ABC Liquors',
+              email: 'admin@abcliquors.com',
+              plan: 'Premium',
+              status: 'active',
+              shops: 5,
+              users: 25,
+              created_at: '2023-01-15',
+              subscription_ends: '2024-01-15',
+            },
+            {
+              id: 2,
+              name: 'XYZ Wines',
+              email: 'admin@xyzwines.com',
+              plan: 'Standard',
+              status: 'active',
+              shops: 3,
+              users: 15,
+              created_at: '2023-02-20',
+              subscription_ends: '2024-02-20',
+            },
+            {
+              id: 3,
+              name: 'City Spirits',
+              email: 'admin@cityspirits.com',
+              plan: 'Basic',
+              status: 'active',
+              shops: 2,
+              users: 10,
+              created_at: '2023-03-10',
+              subscription_ends: '2024-03-10',
+            },
+            {
+              id: 4,
+              name: 'Metro Beverages',
+              email: 'admin@metrobeverages.com',
+              plan: 'Premium',
+              status: 'active',
+              shops: 4,
+              users: 20,
+              created_at: '2023-04-05',
+              subscription_ends: '2024-04-05',
+            },
+            {
+              id: 5,
+              name: 'Downtown Drinks',
+              email: 'admin@downtowndrinks.com',
+              plan: 'Basic',
+              status: 'inactive',
+              shops: 1,
+              users: 5,
+              created_at: '2023-05-15',
+              subscription_ends: '2023-11-15',
+            },
+            {
+              id: 6,
+              name: 'Uptown Liquors',
+              email: 'admin@uptownliquors.com',
+              plan: 'Standard',
+              status: 'active',
+              shops: 2,
+              users: 12,
+              created_at: '2023-06-20',
+              subscription_ends: '2024-06-20',
+            },
+            {
+              id: 7,
+              name: 'Coastal Wines',
+              email: 'admin@coastalwines.com',
+              plan: 'Premium',
+              status: 'active',
+              shops: 3,
+              users: 18,
+              created_at: '2023-07-10',
+              subscription_ends: '2024-07-10',
+            },
+            {
+              id: 8,
+              name: 'Highland Spirits',
+              email: 'admin@highlandspirits.com',
+              plan: 'Basic',
+              status: 'inactive',
+              shops: 1,
+              users: 6,
+              created_at: '2023-08-05',
+              subscription_ends: '2023-11-05',
+            },
+          ]);
+        }
+      } catch (err: any) {
+        console.error('Error fetching tenants:', err);
+        setError(err.message || 'Failed to fetch tenants');
+        showNotification({
+          message: 'Failed to fetch tenants. Please try again later.',
+          variant: 'error',
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchTenants();
+  }, [showNotification]);
 
   // Form validation for tenant dialog
   const { formik } = useFormValidation({
@@ -182,10 +216,102 @@ const TenantsManagement: React.FC = () => {
       subscriptionPeriod: 12,
     },
     validationSchema: tenantValidationSchema,
-    onSubmit: (values) => {
-      console.log('Form submitted:', values);
-      handleCloseTenantDialog();
-      // In a real app, you would make an API call to create/update the tenant
+    onSubmit: async (values) => {
+      try {
+        if (selectedTenant) {
+          // Update existing tenant
+          if (process.env.NODE_ENV === 'production') {
+            const updatedTenant = await tenantService.updateTenant(selectedTenant.id, {
+              name: values.name,
+              email: values.email,
+              plan: values.plan,
+              max_shops: values.maxShops,
+              max_users: values.maxUsers,
+              subscription_period: values.subscriptionPeriod,
+            });
+            
+            // Update the tenant in the local state
+            setTenantsData(prevTenants => 
+              prevTenants.map(tenant => 
+                tenant.id === updatedTenant.id ? updatedTenant : tenant
+              )
+            );
+          } else {
+            // For development/demo purposes
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            // Update the tenant in the local state
+            setTenantsData(prevTenants => 
+              prevTenants.map(tenant => 
+                tenant.id === selectedTenant.id 
+                  ? {
+                      ...tenant,
+                      name: values.name,
+                      email: values.email,
+                      plan: values.plan,
+                      shops: values.maxShops,
+                      users: values.maxUsers,
+                    } 
+                  : tenant
+              )
+            );
+          }
+          
+          showNotification({
+            message: `Tenant "${values.name}" updated successfully`,
+            variant: 'success',
+          });
+        } else {
+          // Create new tenant
+          if (process.env.NODE_ENV === 'production') {
+            const newTenant = await tenantService.createTenant({
+              name: values.name,
+              email: values.email,
+              plan: values.plan,
+              max_shops: values.maxShops,
+              max_users: values.maxUsers,
+              subscription_period: values.subscriptionPeriod,
+            });
+            
+            // Add the new tenant to the local state
+            setTenantsData(prevTenants => [...prevTenants, newTenant]);
+          } else {
+            // For development/demo purposes
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            // Create a mock new tenant
+            const newTenant: Tenant = {
+              id: Math.max(...tenantsData.map(t => t.id)) + 1,
+              name: values.name,
+              email: values.email,
+              plan: values.plan,
+              status: 'active',
+              shops: values.maxShops,
+              users: values.maxUsers,
+              created_at: new Date().toISOString().split('T')[0],
+              subscription_ends: new Date(
+                new Date().setMonth(new Date().getMonth() + values.subscriptionPeriod)
+              ).toISOString().split('T')[0],
+            };
+            
+            // Add the new tenant to the local state
+            setTenantsData(prevTenants => [...prevTenants, newTenant]);
+          }
+          
+          showNotification({
+            message: `Tenant "${values.name}" created successfully`,
+            variant: 'success',
+          });
+        }
+        
+        handleCloseTenantDialog();
+      } catch (err: any) {
+        console.error('Error saving tenant:', err);
+        showNotification({
+          message: err.message || 'Failed to save tenant',
+          variant: 'error',
+        });
+      }
     },
   });
 
@@ -217,7 +343,7 @@ const TenantsManagement: React.FC = () => {
   };
 
   // Handle opening the tenant dialog for editing an existing tenant
-  const handleOpenEditTenantDialog = (tenant: any) => {
+  const handleOpenEditTenantDialog = (tenant: Tenant) => {
     setSelectedTenant(tenant);
     formik.setValues({
       name: tenant.name,
@@ -237,7 +363,7 @@ const TenantsManagement: React.FC = () => {
   };
 
   // Handle deleting a tenant
-  const handleDeleteTenant = async (tenant: any) => {
+  const handleDeleteTenant = async (tenant: Tenant) => {
     const confirmed = await confirm({
       title: tenants('deleteTenant'),
       message: `${tenants('confirmDeleteTenant')} "${tenant.name}"?`,
@@ -247,15 +373,35 @@ const TenantsManagement: React.FC = () => {
     });
 
     if (confirmed) {
-      console.log('Deleting tenant:', tenant);
-      // In a real app, you would make an API call to delete the tenant
+      try {
+        if (process.env.NODE_ENV === 'production') {
+          await tenantService.deleteTenant(tenant.id);
+        } else {
+          // For development/demo purposes
+          await new Promise(resolve => setTimeout(resolve, 500));
+        }
+        
+        // Remove the tenant from the local state
+        setTenantsData(prevTenants => prevTenants.filter(t => t.id !== tenant.id));
+        
+        showNotification({
+          message: `Tenant "${tenant.name}" deleted successfully`,
+          variant: 'success',
+        });
+      } catch (err: any) {
+        console.error('Error deleting tenant:', err);
+        showNotification({
+          message: err.message || 'Failed to delete tenant',
+          variant: 'error',
+        });
+      }
     }
 
     handleActionClose(tenant.id);
   };
 
   // Handle changing the status of a tenant
-  const handleToggleTenantStatus = async (tenant: any) => {
+  const handleToggleTenantStatus = async (tenant: Tenant) => {
     const newStatus = tenant.status === 'active' ? 'inactive' : 'active';
     const confirmed = await confirm({
       title: newStatus === 'active' ? tenants('activateTenant') : tenants('deactivateTenant'),
@@ -268,8 +414,36 @@ const TenantsManagement: React.FC = () => {
     });
 
     if (confirmed) {
-      console.log('Toggling tenant status:', tenant, newStatus);
-      // In a real app, you would make an API call to update the tenant status
+      try {
+        if (process.env.NODE_ENV === 'production') {
+          if (newStatus === 'active') {
+            await tenantService.activateTenant(tenant.id);
+          } else {
+            await tenantService.deactivateTenant(tenant.id);
+          }
+        } else {
+          // For development/demo purposes
+          await new Promise(resolve => setTimeout(resolve, 500));
+        }
+        
+        // Update the tenant status in the local state
+        setTenantsData(prevTenants => 
+          prevTenants.map(t => 
+            t.id === tenant.id ? { ...t, status: newStatus } : t
+          )
+        );
+        
+        showNotification({
+          message: `Tenant "${tenant.name}" ${newStatus === 'active' ? 'activated' : 'deactivated'} successfully`,
+          variant: 'success',
+        });
+      } catch (err: any) {
+        console.error('Error updating tenant status:', err);
+        showNotification({
+          message: err.message || 'Failed to update tenant status',
+          variant: 'error',
+        });
+      }
     }
 
     handleActionClose(tenant.id);
@@ -278,10 +452,25 @@ const TenantsManagement: React.FC = () => {
   // Handle tab change
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
+    
+    // Set status filter based on tab
+    switch (newValue) {
+      case 0:
+        setStatusFilter('all');
+        break;
+      case 1:
+        setStatusFilter('active');
+        break;
+      case 2:
+        setStatusFilter('inactive');
+        break;
+      default:
+        setStatusFilter('all');
+    }
   };
 
   // Filter tenants based on search query and filters
-  const filteredTenants = mockTenants.filter((tenant) => {
+  const filteredTenants = tenantsData.filter((tenant) => {
     const matchesSearch = tenant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       tenant.email.toLowerCase().includes(searchQuery.toLowerCase());
     
@@ -447,6 +636,7 @@ const TenantsManagement: React.FC = () => {
                   ),
                 }}
                 size="small"
+                disabled={isLoading}
               />
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
@@ -456,6 +646,7 @@ const TenantsManagement: React.FC = () => {
                   startIcon={<FilterListIcon />}
                   onClick={handleFilterClick}
                   size="small"
+                  disabled={isLoading}
                 >
                   {common('filter')}
                 </Button>
@@ -543,6 +734,7 @@ const TenantsManagement: React.FC = () => {
                 color="primary"
                 startIcon={<AddIcon />}
                 onClick={handleOpenCreateTenantDialog}
+                disabled={isLoading}
               >
                 {tenants('addTenant')}
               </Button>
@@ -551,14 +743,79 @@ const TenantsManagement: React.FC = () => {
         </CardContent>
       </Card>
 
-      <DataTable
-        columns={columns}
-        data={filteredTenants}
-        keyField="id"
-        pagination
-        paginationPerPage={10}
-        paginationTotalRows={filteredTenants.length}
-      />
+      {isLoading ? (
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 5 }}>
+          <CircularProgress />
+          <Typography variant="body1" sx={{ ml: 2 }}>
+            {common('loading')}
+          </Typography>
+        </Box>
+      ) : error ? (
+        <Card>
+          <CardContent>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 3 }}>
+              <Typography variant="h6" color="error" gutterBottom>
+                {error}
+              </Typography>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => window.location.reload()}
+                sx={{ mt: 2 }}
+              >
+                {common('retry')}
+              </Button>
+            </Box>
+          </CardContent>
+        </Card>
+      ) : filteredTenants.length === 0 ? (
+        <Card>
+          <CardContent>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 3 }}>
+              <Typography variant="h6" gutterBottom>
+                {tenants('noTenantsFound')}
+              </Typography>
+              <Typography variant="body2" color="textSecondary" align="center" sx={{ mb: 2 }}>
+                {searchQuery || statusFilter !== 'all' || planFilter !== 'all'
+                  ? tenants('noTenantsMatchFilter')
+                  : tenants('noTenantsYet')}
+              </Typography>
+              {searchQuery || statusFilter !== 'all' || planFilter !== 'all' ? (
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={() => {
+                    setSearchQuery('');
+                    setStatusFilter('all');
+                    setPlanFilter('all');
+                    setTabValue(0);
+                  }}
+                >
+                  {common('clearFilters')}
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<AddIcon />}
+                  onClick={handleOpenCreateTenantDialog}
+                >
+                  {tenants('addTenant')}
+                </Button>
+              )}
+            </Box>
+          </CardContent>
+        </Card>
+      ) : (
+        <DataTable
+          columns={columns}
+          data={filteredTenants}
+          keyField="id"
+          pagination
+          paginationPerPage={10}
+          paginationTotalRows={filteredTenants.length}
+        />
+      )}
 
       {/* Tenant Dialog */}
       <Dialog open={openTenantDialog} onClose={handleCloseTenantDialog} maxWidth="md" fullWidth>
