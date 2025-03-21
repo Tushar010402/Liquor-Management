@@ -28,6 +28,9 @@ import {
   DialogActions,
   Chip,
   useTheme,
+  CircularProgress,
+  Alert,
+  Snackbar,
 } from '@mui/material';
 import {
   Add,
@@ -41,24 +44,13 @@ import {
   LocalAtm,
   CreditCard,
   AccountBalance,
+  Refresh,
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { PageHeader, FormLayout } from '../../../components/common';
-
-// Mock data for products
-const productsData = [
-  { id: 1, name: 'Johnnie Walker Black Label', category: 'Whisky', price: 3500, stock: 15, barcode: '8901234567890' },
-  { id: 2, name: 'Absolut Vodka', category: 'Vodka', price: 1800, stock: 20, barcode: '8901234567891' },
-  { id: 3, name: 'Jack Daniels', category: 'Whisky', price: 2800, stock: 12, barcode: '8901234567892' },
-  { id: 4, name: 'Bacardi White Rum', category: 'Rum', price: 1200, stock: 18, barcode: '8901234567893' },
-  { id: 5, name: 'Beefeater Gin', category: 'Gin', price: 2200, stock: 10, barcode: '8901234567894' },
-  { id: 6, name: 'Hennessy VS', category: 'Brandy', price: 4500, stock: 8, barcode: '8901234567895' },
-  { id: 7, name: 'Jameson Irish Whiskey', category: 'Whisky', price: 2500, stock: 14, barcode: '8901234567896' },
-  { id: 8, name: 'Smirnoff Vodka', category: 'Vodka', price: 1200, stock: 25, barcode: '8901234567897' },
-  { id: 9, name: 'Chivas Regal 12 Year', category: 'Whisky', price: 3200, stock: 9, barcode: '8901234567898' },
-  { id: 10, name: 'Grey Goose Vodka', category: 'Vodka', price: 3800, stock: 7, barcode: '8901234567899' },
-];
+import { productService, saleService, Product, CreateSaleRequest, SaleItemRequest } from '../../../services/api';
+import { useAuth, useNotification } from '../../../hooks';
 
 interface CartItem {
   id: number;
@@ -72,8 +64,18 @@ interface CartItem {
 const NewSale: React.FC = () => {
   const theme = useTheme();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { showNotification } = useNotification();
+  
+  // State for products and loading
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  
+  // State for sale
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [paymentMethod, setPaymentMethod] = useState('cash');
@@ -81,12 +83,80 @@ const NewSale: React.FC = () => {
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
   const [discount, setDiscount] = useState('');
+  const [discountType, setDiscountType] = useState<'fixed' | 'percentage'>('fixed');
   const [paymentDialog, setPaymentDialog] = useState(false);
   const [barcodeInput, setBarcodeInput] = useState('');
+  const [transactionId, setTransactionId] = useState('');
+  const [notes, setNotes] = useState('');
+  
+  // Get shop ID from user
+  const shopId = user?.assigned_shops && user.assigned_shops.length > 0 
+    ? parseInt(user.assigned_shops[0].id) 
+    : undefined;
+
+  // Fetch products
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setIsLoading(true);
+      setError(null);
+      
+      try {
+        if (process.env.NODE_ENV === 'production') {
+          const productsData = await productService.getProducts(shopId);
+          setProducts(productsData);
+        } else {
+          // For development/demo purposes
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          
+          // Mock products
+          setProducts([
+            { id: 1, name: 'Johnnie Walker Black Label', category: 'Whisky', brand: 'Johnnie Walker', price: 3500, cost_price: 3000, stock: 15, threshold: 5, barcode: '8901234567890', status: 'in_stock', created_at: '2023-01-01', updated_at: '2023-01-01' },
+            { id: 2, name: 'Absolut Vodka', category: 'Vodka', brand: 'Absolut', price: 1800, cost_price: 1500, stock: 20, threshold: 5, barcode: '8901234567891', status: 'in_stock', created_at: '2023-01-01', updated_at: '2023-01-01' },
+            { id: 3, name: 'Jack Daniels', category: 'Whisky', brand: 'Jack Daniels', price: 2800, cost_price: 2400, stock: 12, threshold: 5, barcode: '8901234567892', status: 'in_stock', created_at: '2023-01-01', updated_at: '2023-01-01' },
+            { id: 4, name: 'Bacardi White Rum', category: 'Rum', brand: 'Bacardi', price: 1200, cost_price: 1000, stock: 18, threshold: 5, barcode: '8901234567893', status: 'in_stock', created_at: '2023-01-01', updated_at: '2023-01-01' },
+            { id: 5, name: 'Beefeater Gin', category: 'Gin', brand: 'Beefeater', price: 2200, cost_price: 1800, stock: 10, threshold: 5, barcode: '8901234567894', status: 'in_stock', created_at: '2023-01-01', updated_at: '2023-01-01' },
+            { id: 6, name: 'Hennessy VS', category: 'Brandy', brand: 'Hennessy', price: 4500, cost_price: 3800, stock: 8, threshold: 5, barcode: '8901234567895', status: 'in_stock', created_at: '2023-01-01', updated_at: '2023-01-01' },
+            { id: 7, name: 'Jameson Irish Whiskey', category: 'Whisky', brand: 'Jameson', price: 2500, cost_price: 2100, stock: 14, threshold: 5, barcode: '8901234567896', status: 'in_stock', created_at: '2023-01-01', updated_at: '2023-01-01' },
+            { id: 8, name: 'Smirnoff Vodka', category: 'Vodka', brand: 'Smirnoff', price: 1200, cost_price: 1000, stock: 25, threshold: 5, barcode: '8901234567897', status: 'in_stock', created_at: '2023-01-01', updated_at: '2023-01-01' },
+            { id: 9, name: 'Chivas Regal 12 Year', category: 'Whisky', brand: 'Chivas Regal', price: 3200, cost_price: 2700, stock: 9, threshold: 5, barcode: '8901234567898', status: 'in_stock', created_at: '2023-01-01', updated_at: '2023-01-01' },
+            { id: 10, name: 'Grey Goose Vodka', category: 'Vodka', brand: 'Grey Goose', price: 3800, cost_price: 3200, stock: 7, threshold: 5, barcode: '8901234567899', status: 'in_stock', created_at: '2023-01-01', updated_at: '2023-01-01' },
+          ]);
+        }
+      } catch (err: any) {
+        console.error('Error fetching products:', err);
+        setError(err.message || 'Failed to fetch products');
+        showNotification({
+          message: 'Failed to fetch products. Please try again later.',
+          variant: 'error',
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [shopId, showNotification]);
+
+  // Filter products based on search term
+  const filteredProducts = products.filter(product => 
+    product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    product.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    product.brand.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   // Calculate totals
   const subtotal = cart.reduce((sum, item) => sum + item.total, 0);
-  const discountAmount = discount ? parseFloat(discount) : 0;
+  let discountAmount = 0;
+  
+  if (discount) {
+    if (discountType === 'fixed') {
+      discountAmount = parseFloat(discount);
+    } else {
+      // Calculate percentage discount
+      discountAmount = subtotal * (parseFloat(discount) / 100);
+    }
+  }
+  
   const total = subtotal - discountAmount;
   const change = paymentAmount ? parseFloat(paymentAmount) - total : 0;
 
@@ -123,25 +193,67 @@ const NewSale: React.FC = () => {
   };
 
   // Handle barcode scan
-  const handleBarcodeSubmit = (e: React.FormEvent) => {
+  const handleBarcodeSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    const product = productsData.find(p => p.barcode === barcodeInput);
+    if (!barcodeInput) return;
     
-    if (product) {
-      setSelectedProduct(product);
+    setIsLoading(true);
+    
+    try {
+      if (process.env.NODE_ENV === 'production') {
+        // Search for product by barcode
+        const product = await productService.searchByBarcode(barcodeInput);
+        setSelectedProduct(product);
+      } else {
+        // For development/demo purposes
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        // Find product in mock data
+        const product = products.find(p => p.barcode === barcodeInput);
+        
+        if (product) {
+          setSelectedProduct(product);
+        } else {
+          showNotification({
+            message: 'Product not found with this barcode',
+            variant: 'warning',
+          });
+        }
+      }
+      
       setBarcodeInput('');
       
-      // Auto-add to cart after a short delay
-      setTimeout(() => {
-        handleAddToCart();
-      }, 500);
+      // Auto-add to cart after a short delay if product found
+      if (selectedProduct) {
+        setTimeout(() => {
+          handleAddToCart();
+        }, 500);
+      }
+    } catch (err: any) {
+      console.error('Error searching product by barcode:', err);
+      showNotification({
+        message: err.message || 'Failed to find product with this barcode',
+        variant: 'error',
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
   // Handle quantity change for cart item
   const handleCartItemQuantity = (id: number, newQuantity: number) => {
     if (newQuantity < 1) return;
+    
+    // Check if we have enough stock
+    const product = products.find(p => p.id === id);
+    if (product && newQuantity > product.stock) {
+      showNotification({
+        message: `Only ${product.stock} items available in stock`,
+        variant: 'warning',
+      });
+      return;
+    }
 
     const updatedCart = cart.map(item => {
       if (item.id === id) {
@@ -164,6 +276,14 @@ const NewSale: React.FC = () => {
 
   // Handle payment dialog
   const handlePaymentDialogOpen = () => {
+    if (cart.length === 0) {
+      showNotification({
+        message: 'Please add at least one product to the cart',
+        variant: 'warning',
+      });
+      return;
+    }
+    
     setPaymentAmount(total.toString());
     setPaymentDialog(true);
   };
@@ -173,46 +293,149 @@ const NewSale: React.FC = () => {
   };
 
   // Handle completing the sale
-  const handleCompleteSale = () => {
-    // In a real app, this would send the sale data to the backend
-    console.log({
-      items: cart,
-      subtotal,
-      discount: discountAmount,
-      total,
-      paymentMethod,
-      paymentAmount: parseFloat(paymentAmount),
-      change,
-      customer: {
-        name: customerName,
-        phone: customerPhone,
-      },
-      timestamp: new Date().toISOString(),
-    });
-
-    // Close dialog and navigate to dashboard
-    handlePaymentDialogClose();
+  const handleCompleteSale = async () => {
+    if (cart.length === 0) {
+      showNotification({
+        message: 'Please add at least one product to the cart',
+        variant: 'warning',
+      });
+      return;
+    }
     
-    // Show success message and redirect
-    alert('Sale completed successfully!');
-    navigate('/executive/dashboard');
+    if (paymentMethod === 'cash' && (!paymentAmount || parseFloat(paymentAmount) < total)) {
+      showNotification({
+        message: 'Payment amount must be at least equal to the total amount',
+        variant: 'warning',
+      });
+      return;
+    }
+    
+    setIsSubmitting(true);
+    
+    try {
+      // Prepare sale data
+      const saleData: CreateSaleRequest = {
+        customer_name: customerName || undefined,
+        customer_phone: customerPhone || undefined,
+        payment_method: paymentMethod,
+        items: cart.map(item => ({
+          product_id: item.id,
+          quantity: item.quantity,
+          price: item.price,
+        })),
+        discount_type: discountType,
+        discount_value: discount ? parseFloat(discount) : undefined,
+        notes: notes || undefined,
+      };
+      
+      if (process.env.NODE_ENV === 'production') {
+        // Create sale in the backend
+        const createdSale = await saleService.createSale(saleData, shopId);
+        
+        // Show success message
+        showNotification({
+          message: `Sale completed successfully! Invoice #${createdSale.invoice_number}`,
+          variant: 'success',
+        });
+        
+        // Close dialog and navigate to dashboard
+        handlePaymentDialogClose();
+        navigate('/executive/sales/my-sales');
+      } else {
+        // For development/demo purposes
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Show success message
+        showNotification({
+          message: 'Sale completed successfully! Invoice #INV-2023-1234',
+          variant: 'success',
+        });
+        
+        // Close dialog and navigate to dashboard
+        handlePaymentDialogClose();
+        navigate('/executive/sales/my-sales');
+      }
+    } catch (err: any) {
+      console.error('Error completing sale:', err);
+      showNotification({
+        message: err.message || 'Failed to complete sale',
+        variant: 'error',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // Handle saving as draft
-  const handleSaveAsDraft = () => {
-    // In a real app, this would save the sale as a draft
-    console.log('Saving as draft', {
-      items: cart,
-      subtotal,
-      discount: discountAmount,
-      customer: {
-        name: customerName,
-        phone: customerPhone,
-      },
-    });
+  const handleSaveAsDraft = async () => {
+    if (cart.length === 0) {
+      showNotification({
+        message: 'Please add at least one product to the cart',
+        variant: 'warning',
+      });
+      return;
+    }
     
-    alert('Sale saved as draft!');
-    navigate('/executive/draft-sales');
+    setIsSubmitting(true);
+    
+    try {
+      // In a real app, this would save the sale as a draft
+      // This would require a separate API endpoint for draft sales
+      
+      if (process.env.NODE_ENV === 'production') {
+        // This is a placeholder - in a real app, you would call a specific API endpoint
+        // For now, we'll just simulate a successful draft save
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      } else {
+        // For development/demo purposes
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+      
+      showNotification({
+        message: 'Sale saved as draft!',
+        variant: 'success',
+      });
+      
+      navigate('/executive/sales/draft-sales');
+    } catch (err: any) {
+      console.error('Error saving draft:', err);
+      showNotification({
+        message: err.message || 'Failed to save draft',
+        variant: 'error',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+  
+  // Refresh products
+  const handleRefreshProducts = async () => {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      if (process.env.NODE_ENV === 'production') {
+        const productsData = await productService.getProducts(shopId);
+        setProducts(productsData);
+      } else {
+        // For development/demo purposes
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+      
+      showNotification({
+        message: 'Products refreshed successfully',
+        variant: 'success',
+      });
+    } catch (err: any) {
+      console.error('Error refreshing products:', err);
+      setError(err.message || 'Failed to refresh products');
+      showNotification({
+        message: 'Failed to refresh products. Please try again later.',
+        variant: 'error',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -222,10 +445,36 @@ const NewSale: React.FC = () => {
         subtitle="Create a new sale transaction"
       />
 
+      {error && (
+        <Alert 
+          severity="error" 
+          sx={{ mb: 3 }}
+          action={
+            <Button color="inherit" size="small" onClick={handleRefreshProducts}>
+              Retry
+            </Button>
+          }
+        >
+          {error}
+        </Alert>
+      )}
+
       <Grid container spacing={3}>
         <Grid item xs={12} md={8}>
           <Card sx={{ mb: 3 }}>
             <CardContent>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                <Typography variant="h6">Products</Typography>
+                <Button
+                  startIcon={<Refresh />}
+                  size="small"
+                  onClick={handleRefreshProducts}
+                  disabled={isLoading}
+                >
+                  Refresh
+                </Button>
+              </Box>
+              
               <Grid container spacing={2}>
                 <Grid item xs={12} md={6}>
                   <form onSubmit={handleBarcodeSubmit}>
@@ -235,10 +484,11 @@ const NewSale: React.FC = () => {
                       variant="outlined"
                       value={barcodeInput}
                       onChange={(e) => setBarcodeInput(e.target.value)}
+                      disabled={isLoading}
                       InputProps={{
                         endAdornment: (
                           <InputAdornment position="end">
-                            <IconButton type="submit" edge="end">
+                            <IconButton type="submit" edge="end" disabled={isLoading || !barcodeInput}>
                               <Search />
                             </IconButton>
                           </InputAdornment>
@@ -249,18 +499,29 @@ const NewSale: React.FC = () => {
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <Autocomplete
-                    options={productsData}
+                    options={products}
                     getOptionLabel={(option) => option.name}
                     value={selectedProduct}
                     onChange={(event, newValue) => {
                       setSelectedProduct(newValue);
                     }}
+                    disabled={isLoading}
+                    loading={isLoading}
                     renderInput={(params) => (
                       <TextField
                         {...params}
                         label="Search Products"
                         variant="outlined"
                         fullWidth
+                        InputProps={{
+                          ...params.InputProps,
+                          endAdornment: (
+                            <>
+                              {isLoading ? <CircularProgress color="inherit" size={20} /> : null}
+                              {params.InputProps.endAdornment}
+                            </>
+                          ),
+                        }}
                       />
                     )}
                   />
@@ -339,7 +600,14 @@ const NewSale: React.FC = () => {
                 <Typography variant="h6" gutterBottom>
                   Cart Items
                 </Typography>
-                {cart.length > 0 ? (
+                {isLoading ? (
+                  <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 5 }}>
+                    <CircularProgress size={30} />
+                    <Typography variant="body1" sx={{ ml: 2 }}>
+                      Loading...
+                    </Typography>
+                  </Box>
+                ) : cart.length > 0 ? (
                   <TableContainer component={Paper} variant="outlined">
                     <Table>
                       <TableHead>
@@ -362,12 +630,13 @@ const NewSale: React.FC = () => {
                                 {item.category}
                               </Typography>
                             </TableCell>
-                            <TableCell align="right">₹{item.price}</TableCell>
+                            <TableCell align="right">₹{item.price.toFixed(2)}</TableCell>
                             <TableCell align="center">
                               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                 <IconButton 
                                   size="small" 
                                   onClick={() => handleCartItemQuantity(item.id, item.quantity - 1)}
+                                  disabled={isLoading || isSubmitting}
                                 >
                                   <Remove fontSize="small" />
                                 </IconButton>
@@ -377,17 +646,19 @@ const NewSale: React.FC = () => {
                                 <IconButton 
                                   size="small" 
                                   onClick={() => handleCartItemQuantity(item.id, item.quantity + 1)}
+                                  disabled={isLoading || isSubmitting}
                                 >
                                   <Add fontSize="small" />
                                 </IconButton>
                               </Box>
                             </TableCell>
-                            <TableCell align="right">₹{item.total}</TableCell>
+                            <TableCell align="right">₹{item.total.toFixed(2)}</TableCell>
                             <TableCell align="center">
                               <IconButton 
                                 color="error" 
                                 size="small"
                                 onClick={() => handleRemoveItem(item.id)}
+                                disabled={isLoading || isSubmitting}
                               >
                                 <Delete fontSize="small" />
                               </IconButton>
@@ -463,15 +734,37 @@ const NewSale: React.FC = () => {
                     <Typography variant="body1">Discount:</Typography>
                   </Grid>
                   <Grid item xs={6}>
-                    <TextField
-                      size="small"
-                      value={discount}
-                      onChange={(e) => setDiscount(e.target.value)}
-                      InputProps={{
-                        startAdornment: <InputAdornment position="start">₹</InputAdornment>,
-                      }}
-                      sx={{ width: '100%' }}
-                    />
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <TextField
+                        size="small"
+                        value={discount}
+                        onChange={(e) => setDiscount(e.target.value)}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              {discountType === 'fixed' ? '₹' : ''}
+                            </InputAdornment>
+                          ),
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              {discountType === 'percentage' ? '%' : ''}
+                            </InputAdornment>
+                          ),
+                        }}
+                        sx={{ width: '70%' }}
+                        disabled={isSubmitting}
+                      />
+                      <FormControl size="small" sx={{ width: '30%', ml: 1 }}>
+                        <Select
+                          value={discountType}
+                          onChange={(e) => setDiscountType(e.target.value as 'fixed' | 'percentage')}
+                          disabled={isSubmitting}
+                        >
+                          <MenuItem value="fixed">₹</MenuItem>
+                          <MenuItem value="percentage">%</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Box>
                   </Grid>
                 </Grid>
               </Box>
@@ -495,22 +788,22 @@ const NewSale: React.FC = () => {
                   color="primary"
                   size="large"
                   fullWidth
-                  startIcon={<Receipt />}
+                  startIcon={isSubmitting ? <CircularProgress size={20} color="inherit" /> : <Receipt />}
                   onClick={handlePaymentDialogOpen}
-                  disabled={cart.length === 0}
+                  disabled={isLoading || isSubmitting || cart.length === 0}
                 >
-                  Proceed to Payment
+                  {isSubmitting ? 'Processing...' : 'Proceed to Payment'}
                 </Button>
                 
                 <Button
                   variant="outlined"
                   color="secondary"
                   fullWidth
-                  startIcon={<Save />}
+                  startIcon={isSubmitting ? <CircularProgress size={20} color="inherit" /> : <Save />}
                   onClick={handleSaveAsDraft}
-                  disabled={cart.length === 0}
+                  disabled={isLoading || isSubmitting || cart.length === 0}
                 >
-                  Save as Draft
+                  {isSubmitting ? 'Saving...' : 'Save as Draft'}
                 </Button>
               </Box>
             </CardContent>
@@ -524,11 +817,11 @@ const NewSale: React.FC = () => {
         <DialogContent>
           <Box sx={{ mb: 3 }}>
             <Typography variant="h5" align="center" gutterBottom>
-              Total Amount: ₹{total}
+              Total Amount: ₹{total.toFixed(2)}
             </Typography>
           </Box>
           
-          <FormControl fullWidth margin="normal">
+          <FormControl fullWidth margin="normal" disabled={isSubmitting}>
             <InputLabel id="payment-method-label">Payment Method</InputLabel>
             <Select
               labelId="payment-method-label"
@@ -577,9 +870,12 @@ const NewSale: React.FC = () => {
                   startAdornment: <InputAdornment position="start">₹</InputAdornment>,
                 }}
                 margin="normal"
+                disabled={isSubmitting}
+                error={paymentAmount !== '' && parseFloat(paymentAmount) < total}
+                helperText={paymentAmount !== '' && parseFloat(paymentAmount) < total ? 'Amount must be at least equal to the total' : ''}
               />
               
-              {parseFloat(paymentAmount) >= total && (
+              {paymentAmount !== '' && parseFloat(paymentAmount) >= total && (
                 <Box sx={{ mt: 2, p: 2, bgcolor: 'success.light', borderRadius: 1 }}>
                   <Typography variant="subtitle1" sx={{ color: 'white' }}>
                     Change to return: ₹{change.toFixed(2)}
@@ -595,6 +891,10 @@ const NewSale: React.FC = () => {
               label="UPI Transaction ID"
               variant="outlined"
               margin="normal"
+              value={transactionId}
+              onChange={(e) => setTransactionId(e.target.value)}
+              disabled={isSubmitting}
+              required
             />
           )}
           
@@ -604,6 +904,10 @@ const NewSale: React.FC = () => {
               label="Card Transaction ID"
               variant="outlined"
               margin="normal"
+              value={transactionId}
+              onChange={(e) => setTransactionId(e.target.value)}
+              disabled={isSubmitting}
+              required
             />
           )}
           
@@ -613,21 +917,41 @@ const NewSale: React.FC = () => {
               label="Bank Reference Number"
               variant="outlined"
               margin="normal"
+              value={transactionId}
+              onChange={(e) => setTransactionId(e.target.value)}
+              disabled={isSubmitting}
+              required
             />
           )}
+          
+          <TextField
+            fullWidth
+            label="Notes"
+            variant="outlined"
+            multiline
+            rows={2}
+            margin="normal"
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            disabled={isSubmitting}
+            placeholder="Add any additional notes about this sale"
+          />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handlePaymentDialogClose}>Cancel</Button>
+          <Button onClick={handlePaymentDialogClose} disabled={isSubmitting}>Cancel</Button>
           <Button 
             onClick={handleCompleteSale} 
             variant="contained" 
             color="primary"
             disabled={
-              (paymentMethod === 'cash' && parseFloat(paymentAmount) < total) ||
+              isSubmitting ||
+              (paymentMethod === 'cash' && (!paymentAmount || parseFloat(paymentAmount) < total)) ||
+              ((paymentMethod === 'upi' || paymentMethod === 'card' || paymentMethod === 'bank_transfer') && !transactionId) ||
               cart.length === 0
             }
+            startIcon={isSubmitting ? <CircularProgress size={20} color="inherit" /> : null}
           >
-            Complete Sale
+            {isSubmitting ? 'Processing...' : 'Complete Sale'}
           </Button>
         </DialogActions>
       </Dialog>
