@@ -5,6 +5,7 @@ import productService from './productService';
 import saleService from './saleService';
 import inventoryService from './inventoryService';
 import cashService from './cashService';
+import dashboardService from './dashboardService';
 
 export {
   apiClient,
@@ -14,6 +15,7 @@ export {
   saleService,
   inventoryService,
   cashService,
+  dashboardService,
 };
 
 // Export types
@@ -39,3 +41,10 @@ export type {
   DailySummary,
   DailySummaryRequest
 } from './cashService';
+export type {
+  DashboardStats,
+  SalesOverTime,
+  SalesByCategory,
+  RecentSale,
+  LowStockItem
+} from './dashboardService';
