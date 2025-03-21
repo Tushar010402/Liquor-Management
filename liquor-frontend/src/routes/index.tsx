@@ -9,6 +9,7 @@ import saasAdminRoutes from './saasAdminRoutes';
 import tenantAdminRoutes from './tenantAdminRoutes';
 import shopManagerRoutes from './shopManagerRoutes';
 import assistantManagerRoutes from './assistantManagerRoutes';
+import commonRoutes from './commonRoutes';
 
 const routes: RouteObject[] = [
   {
@@ -27,6 +28,9 @@ const routes: RouteObject[] = [
     path: '/reset-password/:token',
     element: <ResetPasswordPage />,
   },
+  
+  // Common routes for all authenticated users
+  ...commonRoutes,
   
   // Protected routes for different roles
   // Executive routes

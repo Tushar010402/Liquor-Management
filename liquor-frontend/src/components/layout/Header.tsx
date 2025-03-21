@@ -23,6 +23,7 @@ import {
   Logout as LogoutIcon,
   Person as PersonIcon,
   Store as StoreIcon,
+  Help as HelpIcon,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
@@ -36,70 +37,49 @@ const Header: React.FC<HeaderProps> = ({ onSidebarToggle }) => {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  
+
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const [anchorElNotifications, setAnchorElNotifications] = useState<null | HTMLElement>(null);
   const [anchorElShops, setAnchorElShops] = useState<null | HTMLElement>(null);
-  
+
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
-  
+
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-  
+
   const handleOpenNotificationsMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNotifications(event.currentTarget);
   };
-  
+
   const handleCloseNotificationsMenu = () => {
     setAnchorElNotifications(null);
   };
-  
+
   const handleOpenShopsMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElShops(event.currentTarget);
   };
-  
+
   const handleCloseShopsMenu = () => {
     setAnchorElShops(null);
   };
-  
+
   const handleLogout = () => {
     handleCloseUserMenu();
     logout();
   };
-  
+
   const handleProfile = () => {
     handleCloseUserMenu();
-    
-    // Navigate to profile based on user role
-    if (user) {
-      switch (user.role) {
-        case 'saas_admin':
-          navigate('/saas-admin/profile');
-          break;
-        case 'tenant_admin':
-          navigate('/tenant-admin/profile');
-          break;
-        case 'manager':
-          navigate('/manager/profile');
-          break;
-        case 'assistant_manager':
-          navigate('/assistant-manager/profile');
-          break;
-        case 'executive':
-          navigate('/executive/profile');
-          break;
-        default:
-          navigate('/profile');
-      }
-    }
+    // Navigate to common profile page
+    navigate('/profile');
   };
-  
+
   const handleSettings = () => {
     handleCloseUserMenu();
-    
+
     // Navigate to settings based on user role
     if (user) {
       switch (user.role) {
@@ -109,8 +89,8 @@ const Header: React.FC<HeaderProps> = ({ onSidebarToggle }) => {
         case 'tenant_admin':
           navigate('/tenant-admin/settings');
           break;
-        case 'manager':
-          navigate('/manager/settings');
+        case 'shop_manager':
+          navigate('/shop-manager/settings');
           break;
         case 'assistant_manager':
           navigate('/assistant-manager/settings');
@@ -123,13 +103,23 @@ const Header: React.FC<HeaderProps> = ({ onSidebarToggle }) => {
       }
     }
   };
-  
+
+  const handleHelp = () => {
+    handleCloseUserMenu();
+    navigate('/help');
+  };
+
+  const handleViewAllNotifications = () => {
+    handleCloseNotificationsMenu();
+    navigate('/notifications');
+  };
+
   const handleShopSelect = (shopId: string) => {
     handleCloseShopsMenu();
     // In a real app, you would update the current shop in context
     console.log(`Selected shop: ${shopId}`);
   };
-  
+
   // Mock notifications
   const notifications = [
     { id: 1, message: 'New sale requires approval', unread: true },
@@ -137,13 +127,13 @@ const Header: React.FC<HeaderProps> = ({ onSidebarToggle }) => {
     { id: 3, message: 'Purchase order received', unread: false },
     { id: 4, message: 'Daily summary generated', unread: false },
   ];
-  
+
   const unreadCount = notifications.filter(n => n.unread).length;
-  
+
   return (
-    <AppBar 
-      position="fixed" 
-      sx={{ 
+    <AppBar
+      position="fixed"
+      sx={{
         zIndex: theme.zIndex.drawer + 1,
         backgroundColor: 'background.paper',
         color: 'text.primary',
@@ -162,7 +152,7 @@ const Header: React.FC<HeaderProps> = ({ onSidebarToggle }) => {
             <MenuIcon />
           </IconButton>
         )}
-        
+
         <Typography
           variant="h6"
           noWrap
@@ -171,15 +161,15 @@ const Header: React.FC<HeaderProps> = ({ onSidebarToggle }) => {
         >
           {user?.role === 'saas_admin' && 'SaaS Admin Portal'}
           {user?.role === 'tenant_admin' && 'Tenant Admin Portal'}
-          {user?.role === 'manager' && 'Manager Portal'}
+          {user?.role === 'shop_manager' && 'Shop Manager Portal'}
           {user?.role === 'assistant_manager' && 'Assistant Manager Portal'}
           {user?.role === 'executive' && 'Executive Portal'}
         </Typography>
-        
+
         <Box sx={{ flexGrow: 1 }} />
-        
+
         {/* Shop selector for roles that can access multiple shops */}
-        {user && ['manager', 'assistant_manager', 'executive'].includes(user.role) && user.assigned_shops && user.assigned_shops.length > 0 && (
+        {user && ['shop_manager', 'assistant_manager', 'executive'].includes(user.role) && user.assigned_shops && user.assigned_shops.length > 0 && (
           <Box sx={{ ml: 2 }}>
             <Tooltip title="Select shop">
               <IconButton
@@ -225,7 +215,7 @@ const Header: React.FC<HeaderProps> = ({ onSidebarToggle }) => {
             </Menu>
           </Box>
         )}
-        
+
         {/* Notifications */}
         <Box sx={{ ml: 2 }}>
           <Tooltip title="Show notifications">
@@ -258,10 +248,10 @@ const Header: React.FC<HeaderProps> = ({ onSidebarToggle }) => {
           >
             {notifications.length > 0 ? (
               notifications.map((notification) => (
-                <MenuItem 
-                  key={notification.id} 
+                <MenuItem
+                  key={notification.id}
                   onClick={handleCloseNotificationsMenu}
-                  sx={{ 
+                  sx={{
                     backgroundColor: notification.unread ? 'rgba(94, 53, 177, 0.08)' : 'inherit',
                     '&:hover': {
                       backgroundColor: notification.unread ? 'rgba(94, 53, 177, 0.12)' : 'rgba(0, 0, 0, 0.04)',
@@ -277,12 +267,12 @@ const Header: React.FC<HeaderProps> = ({ onSidebarToggle }) => {
               </MenuItem>
             )}
             <Divider />
-            <MenuItem onClick={handleCloseNotificationsMenu}>
+            <MenuItem onClick={handleViewAllNotifications}>
               <Typography variant="body2" color="primary">View all notifications</Typography>
             </MenuItem>
           </Menu>
         </Box>
-        
+
         {/* User menu */}
         <Box sx={{ ml: 2 }}>
           <Tooltip title="Open settings">
@@ -328,6 +318,12 @@ const Header: React.FC<HeaderProps> = ({ onSidebarToggle }) => {
                 <SettingsIcon fontSize="small" />
               </ListItemIcon>
               <Typography textAlign="center">Settings</Typography>
+            </MenuItem>
+            <MenuItem onClick={handleHelp}>
+              <ListItemIcon>
+                <HelpIcon fontSize="small" />
+              </ListItemIcon>
+              <Typography textAlign="center">Help</Typography>
             </MenuItem>
             <Divider />
             <MenuItem onClick={handleLogout}>
