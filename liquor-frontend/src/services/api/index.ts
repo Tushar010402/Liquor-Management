@@ -6,6 +6,7 @@ import saleService from './saleService';
 import inventoryService from './inventoryService';
 import cashService from './cashService';
 import dashboardService from './dashboardService';
+import userService from './userService';
 
 export {
   apiClient,
@@ -16,6 +17,7 @@ export {
   inventoryService,
   cashService,
   dashboardService,
+  userService,
 };
 
 // Export types
@@ -48,3 +50,11 @@ export type {
   RecentSale,
   LowStockItem
 } from './dashboardService';
+export type {
+  User,
+  UserRole,
+  UserStatus,
+  CreateUserRequest,
+  UpdateUserRequest,
+  ChangePasswordRequest
+} from './userService';
