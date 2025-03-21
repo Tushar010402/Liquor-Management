@@ -4,6 +4,7 @@ import tenantService from './tenantService';
 import productService from './productService';
 import saleService from './saleService';
 import inventoryService from './inventoryService';
+import cashService from './cashService';
 
 export {
   apiClient,
@@ -12,6 +13,7 @@ export {
   productService,
   saleService,
   inventoryService,
+  cashService,
 };
 
 // Export types
@@ -27,3 +29,13 @@ export type {
   ExpiryTrackingRequest, 
   InventoryStatistics 
 } from './inventoryService';
+export type {
+  CashTransaction,
+  CashDepositRequest,
+  UpiTransactionRequest,
+  ExpenseRequest,
+  CashCollectionRequest,
+  CashBalance,
+  DailySummary,
+  DailySummaryRequest
+} from './cashService';
