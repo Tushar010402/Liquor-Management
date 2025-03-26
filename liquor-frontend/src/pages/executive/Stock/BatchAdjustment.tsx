@@ -28,6 +28,7 @@ import {
   Autocomplete,
   Chip,
   Alert,
+  SelectChangeEvent,
 } from '@mui/material';
 import {
   Add as AddIcon,
@@ -125,12 +126,11 @@ const BatchAdjustment: React.FC = () => {
     setAdjustments(adjustments.filter(item => item.id !== id));
   };
 
-  const handleReasonChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    const selectedReason = event.target.value as string;
-    setReason(selectedReason);
+  const handleReasonChange = (event: SelectChangeEvent) => {
+    setReason(event.target.value);
     
     // Auto-select adjustment type based on reason
-    const reasonData = adjustmentReasons.find(r => r.value === selectedReason);
+    const reasonData = adjustmentReasons.find(r => r.value === event.target.value);
     if (reasonData && reasonData.type !== 'both') {
       setAdjustmentType(reasonData.type as 'increase' | 'decrease');
     }

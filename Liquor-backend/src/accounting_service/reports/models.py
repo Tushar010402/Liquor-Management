@@ -2,7 +2,7 @@ import uuid
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from common.models import TenantAwareModel
-from accounts.models import FiscalYear, AccountingPeriod
+from accounting_service.accounts.models import FiscalYear, AccountingPeriod
 
 
 class FinancialReport(TenantAwareModel):

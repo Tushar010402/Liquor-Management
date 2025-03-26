@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from common.models import ShopAwareModel
-from products.models import Product, ProductVariant
+from inventory_service.products.models import Product, ProductVariant
 
 
 class StockLevel(ShopAwareModel):

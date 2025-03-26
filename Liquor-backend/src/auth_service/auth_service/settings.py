@@ -34,9 +34,12 @@ INSTALLED_APPS = [
     'django_filters',
     
     # Local apps
-    'authentication',
-    'users',
-    'common',
+    'auth_service.authentication',
+    'auth_service.users',
+    'auth_service.common',
+    'auth_service.tenants',
+    'auth_service.roles',
+    'auth_service.shops',
 ]
 
 MIDDLEWARE = [
@@ -153,7 +156,7 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer' if DEBUG else 'rest_framework.renderers.JSONRenderer',
     ),
-    'EXCEPTION_HANDLER': 'common.exceptions.custom_exception_handler',
+    'EXCEPTION_HANDLER': 'auth_service.common.exceptions.custom_exception_handler',
 }
 
 # JWT settings

@@ -1,0 +1,26 @@
+INFO 2025-03-26 08:50:12,458 autoreload 17 133828320488320 Watching for file changes with StatReloader
+INFO 2025-03-26 09:03:45,113 autoreload 25 123475732429696 Watching for file changes with StatReloader
+INFO 2025-03-26 09:06:46,354 autoreload 17 137630181735296 Watching for file changes with StatReloader
+INFO 2025-03-26 09:09:41,382 autoreload 17 134168203008896 Watching for file changes with StatReloader
+INFO 2025-03-26 09:13:38,835 autoreload 407349 126583150212928 Watching for file changes with StatReloader
+INFO 2025-03-26 09:24:16,517 autoreload 407349 126583150212928 /home/tusharlinux/Documents/LiquorManagement-including-inventory-management/Liquor-backend/src/auth_service/auth_service/settings.py changed, reloading.
+INFO 2025-03-26 09:24:17,106 autoreload 420327 123341682804544 Watching for file changes with StatReloader
+INFO 2025-03-26 10:22:35,670 autoreload 12 135546428570496 Watching for file changes with StatReloader
+INFO 2025-03-26 10:25:00,251 autoreload 13 134011589671808 Watching for file changes with StatReloader
+INFO 2025-03-26 10:27:17,399 autoreload 13 125780390640512 Watching for file changes with StatReloader
+INFO 2025-03-26 10:28:29,380 autoreload 13 125780390640512 /app/src/auth_service/auth_service/settings.py changed, reloading.
+INFO 2025-03-26 10:28:30,748 autoreload 15 137324367051648 Watching for file changes with StatReloader
+INFO 2025-03-26 10:33:29,919 autoreload 13 125956633893760 Watching for file changes with StatReloader
+INFO 2025-03-26 10:35:18,028 autoreload 13 125956633893760 /app/src/auth_service/auth_service/__init__.py changed, reloading.
+INFO 2025-03-26 10:35:20,204 autoreload 15 128332132019072 Watching for file changes with StatReloader
+INFO 2025-03-26 10:39:46,464 autoreload 13 124487914503040 Watching for file changes with StatReloader
+INFO 2025-03-26 10:44:13,009 autoreload 13 125375623924608 Watching for file changes with StatReloader
+INFO 2025-03-26 10:46:33,448 autoreload 13 125375623924608 /app/src/auth_service/auth_service/__init__.py changed, reloading.
+INFO 2025-03-26 10:46:35,658 autoreload 15 124056711342976 Watching for file changes with StatReloader
+INFO 2025-03-26 10:51:08,473 autoreload 12 132446878235520 Watching for file changes with StatReloader
+INFO 2025-03-26 11:11:11,088 autoreload 432 128207200078720 Watching for file changes with StatReloader
+INFO 2025-03-26 13:14:37,466 autoreload 433 132682632420224 Watching for file changes with StatReloader
+INFO 2025-03-26 16:29:17,616 autoreload 432 123946927299456 Watching for file changes with StatReloader
+INFO 2025-03-26 16:53:35,626 autoreload 432 134787584162688 Watching for file changes with StatReloader
+INFO 2025-03-26 17:01:58,350 autoreload 492 125209729821568 Watching for file changes with StatReloader
+INFO 2025-03-26 17:04:43,311 autoreload 493 134455805971328 Watching for file changes with StatReloader

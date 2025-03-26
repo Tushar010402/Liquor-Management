@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from common.models import TenantAwareModel
-from brands.models import Brand
+from inventory_service.brands.models import Brand
 
 
 class ProductCategory(TenantAwareModel):

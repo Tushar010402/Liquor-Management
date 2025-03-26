@@ -2,7 +2,7 @@ import uuid
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from common.models import ShopAwareModel
-from purchase_orders.models import PurchaseOrder, PurchaseOrderItem
+from purchase_service.purchase_orders.models import PurchaseOrder, PurchaseOrderItem
 
 
 class GoodsReceipt(ShopAwareModel):

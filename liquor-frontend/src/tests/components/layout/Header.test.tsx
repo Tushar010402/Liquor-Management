@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent } from '../../test-utils';
+import { render, screen, fireEvent, cleanup } from '../../test-utils';
 import Header from '../../../components/layout/Header';
 import * as authHook from '../../../hooks/useAuth';
 
@@ -160,7 +160,14 @@ describe('Header', () => {
       expect(screen.getByText(title)).toBeInTheDocument();
       
       // Cleanup
-      screen.unmount();
+      cleanup();
     }
+  });
+
+  test('renders user menu items when user icon is clicked', async () => {
+    // ... existing test code
+    
+    // Cleanup
+    cleanup();
   });
 });

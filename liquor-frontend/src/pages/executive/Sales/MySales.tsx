@@ -45,6 +45,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { useNavigate } from 'react-router-dom';
 import { PageHeader, DataTable } from '../../../components/common';
+import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 
 // Mock data for sales
 const salesData = [
@@ -349,11 +350,12 @@ const MySales: React.FC = () => {
     setDetailsDialogOpen(false);
   };
 
-  const columns = [
+  const columns: GridColDef[] = [
     { 
       field: 'invoice', 
       headerName: 'Invoice', 
       width: 150,
+      type: 'string',
       renderCell: (params: any) => (
         <Typography variant="body2" sx={{ fontWeight: 500 }}>
           {params.value}
@@ -364,6 +366,7 @@ const MySales: React.FC = () => {
       field: 'date', 
       headerName: 'Date & Time', 
       width: 180,
+      type: 'string',
       renderCell: (params: any) => (
         <Typography variant="body2">
           {params.row.date} {params.row.time}
@@ -374,17 +377,20 @@ const MySales: React.FC = () => {
       field: 'customer', 
       headerName: 'Customer', 
       width: 180,
+      type: 'string',
     },
     { 
       field: 'items', 
       headerName: 'Items', 
       width: 100,
+      type: 'number',
       align: 'center',
     },
     { 
       field: 'total', 
       headerName: 'Total', 
       width: 120,
+      type: 'number',
       renderCell: (params: any) => (
         <Typography variant="body2" sx={{ fontWeight: 500 }}>
           ₹{params.value}
@@ -395,6 +401,7 @@ const MySales: React.FC = () => {
       field: 'payment', 
       headerName: 'Payment', 
       width: 120,
+      type: 'string',
       renderCell: (params: any) => (
         <Chip 
           label={params.value} 
@@ -411,6 +418,7 @@ const MySales: React.FC = () => {
       field: 'status', 
       headerName: 'Status', 
       width: 120,
+      type: 'string',
       renderCell: (params: any) => (
         <Chip 
           label={params.value} 
@@ -427,6 +435,7 @@ const MySales: React.FC = () => {
       field: 'actions',
       headerName: 'Actions',
       width: 120,
+      type: 'actions',
       renderCell: (params: any) => (
         <Box>
           <IconButton 

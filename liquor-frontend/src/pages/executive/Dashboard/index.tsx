@@ -19,6 +19,7 @@ import {
   useTheme,
   LinearProgress,
   Paper,
+  SelectChangeEvent,
 } from '@mui/material';
 import {
   Store,
@@ -105,8 +106,8 @@ const ExecutiveDashboard: React.FC = () => {
   const { user } = useAuth();
   const [selectedShop, setSelectedShop] = useState(user?.assigned_shops?.[0]?.id || '');
 
-  const handleShopChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setSelectedShop(event.target.value as string);
+  const handleShopChange = (event: SelectChangeEvent) => {
+    setSelectedShop(event.target.value);
   };
 
   // Calculate daily target progress

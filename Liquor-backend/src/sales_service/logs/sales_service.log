@@ -1,0 +1,31 @@
+INFO 2025-03-26 08:23:34,155 autoreload 358913 139176038532928 Watching for file changes with StatReloader
+INFO 2025-03-26 08:50:12,101 autoreload 17 134615992286080 Watching for file changes with StatReloader
+INFO 2025-03-26 08:51:45,126 autoreload 382797 123253253052224 Watching for file changes with StatReloader
+INFO 2025-03-26 08:58:54,935 autoreload 391591 125616285734720 Watching for file changes with StatReloader
+INFO 2025-03-26 08:59:02,289 autoreload 391753 128517379794752 Watching for file changes with StatReloader
+INFO 2025-03-26 09:03:45,114 autoreload 25 128957868899200 Watching for file changes with StatReloader
+INFO 2025-03-26 09:06:46,478 autoreload 17 130954633841536 Watching for file changes with StatReloader
+INFO 2025-03-26 09:09:41,886 autoreload 17 136743260461952 Watching for file changes with StatReloader
+INFO 2025-03-26 09:11:35,968 autoreload 406728 138988957148992 Watching for file changes with StatReloader
+INFO 2025-03-26 09:12:21,557 autoreload 391753 128517379794752 /home/tusharlinux/Documents/LiquorManagement-including-inventory-management/Liquor-backend/src/sales_service/sales_service/local_settings.py changed, reloading.
+INFO 2025-03-26 09:12:22,014 autoreload 406806 124708058933056 Watching for file changes with StatReloader
+INFO 2025-03-26 09:12:36,698 autoreload 407052 138122288457536 Watching for file changes with StatReloader
+INFO 2025-03-26 10:22:36,933 autoreload 13 136325508402048 Watching for file changes with StatReloader
+INFO 2025-03-26 10:25:01,424 autoreload 13 128846284135296 Watching for file changes with StatReloader
+INFO 2025-03-26 10:27:18,315 autoreload 12 138629916855168 Watching for file changes with StatReloader
+INFO 2025-03-26 10:29:38,346 autoreload 12 138629916855168 /app/src/sales_service/sales_service/settings.py changed, reloading.
+INFO 2025-03-26 10:29:39,513 autoreload 14 137366983629696 Watching for file changes with StatReloader
+INFO 2025-03-26 10:33:29,991 autoreload 13 127388510669696 Watching for file changes with StatReloader
+INFO 2025-03-26 10:35:18,141 autoreload 13 127388510669696 /app/src/sales_service/sales_service/__init__.py changed, reloading.
+INFO 2025-03-26 10:35:20,213 autoreload 15 125075681549184 Watching for file changes with StatReloader
+INFO 2025-03-26 10:39:46,518 autoreload 13 127363064073088 Watching for file changes with StatReloader
+INFO 2025-03-26 10:44:13,404 autoreload 13 135083642039168 Watching for file changes with StatReloader
+INFO 2025-03-26 10:46:33,679 autoreload 13 135083642039168 /app/src/sales_service/sales_service/__init__.py changed, reloading.
+INFO 2025-03-26 10:46:36,151 autoreload 15 134452835273600 Watching for file changes with StatReloader
+INFO 2025-03-26 10:51:08,171 autoreload 14 136224966978432 Watching for file changes with StatReloader
+INFO 2025-03-26 11:11:11,134 autoreload 431 140093919144832 Watching for file changes with StatReloader
+INFO 2025-03-26 13:14:37,387 autoreload 433 138380985318272 Watching for file changes with StatReloader
+INFO 2025-03-26 16:29:17,593 autoreload 433 137260332125056 Watching for file changes with StatReloader
+INFO 2025-03-26 16:53:36,150 autoreload 432 137058633808768 Watching for file changes with StatReloader
+INFO 2025-03-26 17:01:58,229 autoreload 493 129349291334528 Watching for file changes with StatReloader
+INFO 2025-03-26 17:04:43,491 autoreload 493 131894083529600 Watching for file changes with StatReloader

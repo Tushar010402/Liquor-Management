@@ -3,10 +3,19 @@ Kafka configuration for the Liquor Management System.
 This file defines the Kafka topics and event types used across all services.
 """
 
+# Kafka bootstrap servers
+BOOTSTRAP_SERVERS = ['kafka:9092']
+
 # Kafka topics
 TOPICS = {
     # User-related events
     'USER_EVENTS': 'user-events',
+    
+    # Tenant-related events
+    'TENANT_EVENTS': 'tenant-events',
+    
+    # Shop-related events
+    'SHOP_EVENTS': 'shop-events',
     
     # Inventory-related events
     'INVENTORY_EVENTS': 'inventory-events',
@@ -54,6 +63,7 @@ EVENT_TYPES = {
     'SHOP_CREATED': 'shop_created',
     'SHOP_UPDATED': 'shop_updated',
     'SHOP_DELETED': 'shop_deleted',
+    'SHOP_STATUS_CHANGED': 'shop_status_changed',
     
     # Inventory events
     'PRODUCT_CREATED': 'product_created',
@@ -122,9 +132,17 @@ EVENT_TYPES = {
     # Reporting events
     'REPORT_GENERATED': 'report_generated',
     'REPORT_SCHEDULED': 'report_scheduled',
+    'DASHBOARD_DATA_UPDATED': 'dashboard_data_updated',
+    'TAX_REPORT_GENERATED': 'tax_report_generated',
     
     # Notification events
     'NOTIFICATION_CREATED': 'notification_created',
+    
+    # Accounting events
+    'SALES_TRANSACTION_CREATED': 'sales_transaction_created',
+    'PURCHASE_PAYMENT_CREATED': 'purchase_payment_created',
+    'JOURNAL_ENTRY_CREATED': 'journal_entry_created',
+    'LEDGER_UPDATED': 'ledger_updated',
 }
 
 # Event schemas
@@ -188,6 +206,7 @@ EVENT_SCHEMAS = {
 # Consumer groups
 CONSUMER_GROUPS = {
     'AUTH_SERVICE': 'auth-service-group',
+    'CORE_SERVICE': 'core-service-group',
     'INVENTORY_SERVICE': 'inventory-service-group',
     'SALES_SERVICE': 'sales-service-group',
     'PURCHASE_SERVICE': 'purchase-service-group',

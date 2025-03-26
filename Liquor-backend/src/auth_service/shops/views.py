@@ -8,7 +8,7 @@ from .serializers import (
     ShopSerializer, ShopCreateSerializer, ShopUpdateSerializer,
     ShopSettingsSerializer, ShopActivitySerializer
 )
-from users.permissions import IsTenantAdmin, IsTenantUser
+from users.permissions import IsTenantAdmin
 
 
 class ShopViewSet(viewsets.ModelViewSet):
@@ -16,7 +16,7 @@ class ShopViewSet(viewsets.ModelViewSet):
     API endpoint for managing shops.
     """
     queryset = Shop.objects.all()
-    permission_classes = [IsAuthenticated, IsTenantUser]
+    permission_classes = [IsAuthenticated, IsTenantAdmin]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['tenant_id', 'status', 'shop_type', 'is_active']
     search_fields = ['name', 'code', 'city', 'state']

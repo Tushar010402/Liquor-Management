@@ -3,7 +3,7 @@ from django.apps import AppConfig
 
 class ProductsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'products'
+    name = 'inventory_service.products'
     
     def ready(self):
-        import products.signals
+        import inventory_service.products.signals

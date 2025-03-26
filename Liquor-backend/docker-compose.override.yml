@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  auth_service:
+    environment:
+      - PYTHONPATH=/app:/app/src
+      - SERVICE_NAME=auth
+    volumes:
+      - ./src:/app/src
+      - ./src/auth_service/logs:/app/src/auth_service/logs
+    entrypoint: ["/app/docker-entrypoint.sh"]
+
+  core_service:
+    environment:
+      - PYTHONPATH=/app:/app/src
+      - SERVICE_NAME=core
+    volumes:
+      - ./src:/app/src
+      - ./src/core_service/logs:/app/src/core_service/logs
+    entrypoint: ["/app/docker-entrypoint.sh"]
+
+  sales_service:
+    environment:
+      - PYTHONPATH=/app:/app/src
+      - SERVICE_NAME=sales
+    volumes:
+      - ./src:/app/src
+      - ./src/sales_service/logs:/app/src/sales_service/logs
+    entrypoint: ["/app/docker-entrypoint.sh"]
+
+  inventory_service:
+    environment:
+      - PYTHONPATH=/app:/app/src
+      - SERVICE_NAME=inventory
+    volumes:
+      - ./src:/app/src
+      - ./src/inventory_service/logs:/app/src/inventory_service/logs
+    entrypoint: ["/app/docker-entrypoint.sh"]
+
+  purchase_service:
+    environment:
+      - PYTHONPATH=/app:/app/src
+      - SERVICE_NAME=purchase
+    volumes:
+      - ./src:/app/src
+      - ./src/purchase_service/logs:/app/src/purchase_service/logs
+    entrypoint: ["/app/docker-entrypoint.sh"]
+
+  reporting_service:
+    environment:
+      - PYTHONPATH=/app:/app/src
+      - SERVICE_NAME=reporting
+    volumes:
+      - ./src:/app/src
+      - ./src/reporting_service/logs:/app/src/reporting_service/logs
+    entrypoint: ["/app/docker-entrypoint.sh"]
+
+  accounting_service:
+    environment:
+      - PYTHONPATH=/app:/app/src
+      - SERVICE_NAME=accounting
+    volumes:
+      - ./src:/app/src
+      - ./src/accounting_service/logs:/app/src/accounting_service/logs
+    entrypoint: ["/app/docker-entrypoint.sh"]

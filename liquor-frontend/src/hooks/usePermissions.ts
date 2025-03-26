@@ -18,17 +18,17 @@ function usePermissions() {
       if (!user) return false;
 
       // SaaS admin has all permissions
-      if (user.role === 'saas_admin' && user.permissions.includes('all')) {
+      if (user.role === 'saas_admin' && user.permissions?.includes('all')) {
         return true;
       }
 
       // Tenant admin has all tenant permissions
-      if (user.role === 'tenant_admin' && user.permissions.includes('tenant_all')) {
+      if (user.role === 'tenant_admin' && user.permissions?.includes('tenant_all')) {
         return permission.startsWith('tenant_') || permission.startsWith('shop_');
       }
 
       // Check specific permission
-      return user.permissions.includes(permission);
+      return user.permissions?.includes(permission) || false;
     },
     [user]
   );
@@ -68,8 +68,8 @@ function usePermissions() {
 
       // SaaS admin and tenant admin have access to all shops
       if (
-        (user.role === 'saas_admin' && user.permissions.includes('all')) ||
-        (user.role === 'tenant_admin' && user.permissions.includes('tenant_all'))
+        (user.role === 'saas_admin' && user.permissions?.includes('all')) ||
+        (user.role === 'tenant_admin' && user.permissions?.includes('tenant_all'))
       ) {
         return true;
       }

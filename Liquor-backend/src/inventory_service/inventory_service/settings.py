@@ -34,11 +34,11 @@ INSTALLED_APPS = [
     'django_filters',
     
     # Local apps
-    'brands',
-    'products',
-    'suppliers',
-    'stock',
-    'common',
+    'inventory_service.brands',
+    'inventory_service.products',
+    'inventory_service.suppliers',
+    'inventory_service.stock',
+    'inventory_service.common',
 ]
 
 MIDDLEWARE = [
@@ -152,7 +152,7 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer' if DEBUG else 'rest_framework.renderers.JSONRenderer',
     ),
-    'EXCEPTION_HANDLER': 'common.exceptions.custom_exception_handler',
+    'EXCEPTION_HANDLER': 'inventory_service.common.exceptions.custom_exception_handler',
 }
 
 # JWT settings

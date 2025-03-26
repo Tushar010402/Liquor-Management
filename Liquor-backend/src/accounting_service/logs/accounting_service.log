@@ -1,0 +1,19 @@
+INFO 2025-03-26 10:22:35,560 autoreload 13 134271274949504 Watching for file changes with StatReloader
+INFO 2025-03-26 10:25:00,245 autoreload 12 136135449025408 Watching for file changes with StatReloader
+INFO 2025-03-26 10:27:17,713 autoreload 13 129908921531264 Watching for file changes with StatReloader
+INFO 2025-03-26 10:29:04,787 autoreload 13 129908921531264 /app/src/accounting_service/accounting_service/settings.py changed, reloading.
+INFO 2025-03-26 10:29:05,972 autoreload 15 132600887856000 Watching for file changes with StatReloader
+INFO 2025-03-26 10:33:29,935 autoreload 12 124904958352256 Watching for file changes with StatReloader
+INFO 2025-03-26 10:35:18,046 autoreload 12 124904958352256 /app/src/accounting_service/accounting_service/__init__.py changed, reloading.
+INFO 2025-03-26 10:35:20,097 autoreload 14 138109149748096 Watching for file changes with StatReloader
+INFO 2025-03-26 10:39:46,584 autoreload 13 125662567414656 Watching for file changes with StatReloader
+INFO 2025-03-26 10:44:13,305 autoreload 13 140189076147072 Watching for file changes with StatReloader
+INFO 2025-03-26 10:46:33,584 autoreload 13 140189076147072 /app/src/accounting_service/accounting_service/__init__.py changed, reloading.
+INFO 2025-03-26 10:46:35,822 autoreload 15 138711124192128 Watching for file changes with StatReloader
+INFO 2025-03-26 10:51:08,844 autoreload 12 125196177525632 Watching for file changes with StatReloader
+INFO 2025-03-26 11:11:11,481 autoreload 432 124320301431680 Watching for file changes with StatReloader
+INFO 2025-03-26 13:14:37,623 autoreload 433 135102387039104 Watching for file changes with StatReloader
+INFO 2025-03-26 16:29:17,320 autoreload 433 127687533353856 Watching for file changes with StatReloader
+INFO 2025-03-26 16:53:35,777 autoreload 433 131902828776320 Watching for file changes with StatReloader
+INFO 2025-03-26 17:01:58,227 autoreload 493 132603357744000 Watching for file changes with StatReloader
+INFO 2025-03-26 17:04:43,289 autoreload 493 135121587768192 Watching for file changes with StatReloader

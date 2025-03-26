@@ -1,20 +1,7 @@
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authService } from '../services';
-
-// Define user roles
-export type UserRole = 'saas_admin' | 'tenant_admin' | 'manager' | 'assistant_manager' | 'executive';
-
-// Define user interface
-export interface User {
-  id: string;
-  email: string;
-  full_name: string;
-  role: UserRole;
-  tenant_id?: string;
-  assigned_shops?: { id: string; name: string }[];
-  permissions?: string[];
-}
+import { User, UserRole } from '../types/auth';
 
 // Define auth context interface
 interface AuthContextType {
@@ -24,6 +11,8 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   error: string | null;
+  forgotPassword: (email: string) => Promise<void>;
+  resetPassword: (password: string, token: string) => Promise<void>;
 }
 
 // Create the auth context
@@ -34,6 +23,8 @@ export const AuthContext = createContext<AuthContextType>({
   login: async () => {},
   logout: () => {},
   error: null,
+  forgotPassword: async () => {},
+  resetPassword: async () => {},
 });
 
 interface AuthProviderProps {
@@ -217,6 +208,41 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  // Add forgotPassword and resetPassword methods
+  const forgotPassword = async (email: string) => {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      // For demo purposes, simulate API call
+      // In production, replace with actual API call
+      console.log('Password reset requested for:', email);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    } catch (err: any) {
+      console.error('Password reset request error:', err);
+      setError(err.response?.data?.message || 'Failed to process password reset request');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const resetPassword = async (password: string, token: string) => {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      // For demo purposes, simulate API call
+      // In production, replace with actual API call
+      console.log('Resetting password with token:', token);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    } catch (err: any) {
+      console.error('Password reset error:', err);
+      setError(err.response?.data?.message || 'Failed to reset password');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -226,6 +252,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         login,
         logout,
         error,
+        forgotPassword,
+        resetPassword
       }}
     >
       {children}

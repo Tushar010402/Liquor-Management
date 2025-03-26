@@ -1,5 +1,5 @@
 import { post } from '../utils/api';
-import { User } from '../contexts/AuthContext';
+import { User } from '../types/auth';
 
 interface LoginRequest {
   email: string;

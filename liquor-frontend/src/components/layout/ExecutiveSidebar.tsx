@@ -22,7 +22,7 @@ import {
   ShoppingBasket as BatchSaleIcon,
   Receipt as MySalesIcon,
   Save as DraftSalesIcon,
-  Branding as BrandSalesIcon,
+  Loyalty as BrandSalesIcon,
   InventoryOutlined as SingleAdjustmentIcon,
   Inventory2 as BatchAdjustmentIcon,
   History as MyAdjustmentsIcon,
@@ -34,6 +34,7 @@ import {
   CalendarToday as DailySummaryIcon,
   Timeline as CashHistoryIcon,
   PieChart as PaymentBreakdownIcon,
+  BarChart,
 } from '@mui/icons-material';
 
 interface ExecutiveSidebarProps {

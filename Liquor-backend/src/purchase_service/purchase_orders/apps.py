@@ -3,7 +3,7 @@ from django.apps import AppConfig
 
 class PurchaseOrdersConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'purchase_orders'
+    name = 'purchase_service.purchase_orders'
     
     def ready(self):
-        import purchase_orders.signals
+        import purchase_service.purchase_orders.signals

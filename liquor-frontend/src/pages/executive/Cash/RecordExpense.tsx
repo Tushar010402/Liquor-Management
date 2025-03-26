@@ -12,33 +12,29 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  FormHelperText,
   InputAdornment,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
-  FormHelperText,
   Paper,
   Stepper,
   Step,
   StepLabel,
-  IconButton,
 } from '@mui/material';
 import {
-  MonetizationOn,
   AttachFile,
   PhotoCamera,
-  Check,
-  ArrowBack,
 } from '@mui/icons-material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
-import { PageHeader, FormLayout } from '../../../components/common';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { PageHeader } from '../../../components/common';
+import { useNavigate } from 'react-router-dom';
 
 // Validation schema
 const validationSchema = Yup.object({
@@ -223,12 +219,14 @@ const RecordExpense: React.FC = () => {
                       <DatePicker
                         label="Expense Date"
                         value={formik.values.expenseDate}
-                        onChange={(value) => formik.setFieldValue('expenseDate', value)}
+                        onChange={(newValue) => formik.setFieldValue('expenseDate', newValue)}
                         slotProps={{ 
                           textField: { 
                             fullWidth: true,
                             error: formik.touched.expenseDate && Boolean(formik.errors.expenseDate),
-                            helperText: formik.touched.expenseDate && formik.errors.expenseDate,
+                            helperText: formik.touched.expenseDate && formik.errors.expenseDate 
+                              ? String(formik.errors.expenseDate) 
+                              : '',
                           } 
                         }}
                       />

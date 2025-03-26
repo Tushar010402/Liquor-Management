@@ -12,33 +12,28 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  FormHelperText,
   InputAdornment,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
-  FormHelperText,
   Paper,
   Stepper,
   Step,
   StepLabel,
-  IconButton,
 } from '@mui/material';
 import {
-  AccountBalance,
   AttachFile,
   PhotoCamera,
-  Check,
-  ArrowBack,
 } from '@mui/icons-material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
-import { PageHeader, FormLayout } from '../../../components/common';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { PageHeader } from '../../../components/common';
 
 // Validation schema
 const validationSchema = Yup.object({
@@ -58,7 +53,6 @@ const validationSchema = Yup.object({
 });
 
 const RecordDeposit: React.FC = () => {
-  const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [depositImage, setDepositImage] = useState<string | null>(null);
@@ -98,7 +92,6 @@ const RecordDeposit: React.FC = () => {
     
     // Show success message and redirect
     alert('Deposit submitted for approval!');
-    navigate('/executive/cash-balance');
   };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -208,12 +201,12 @@ const RecordDeposit: React.FC = () => {
                       <DatePicker
                         label="Deposit Date"
                         value={formik.values.depositDate}
-                        onChange={(value) => formik.setFieldValue('depositDate', value)}
+                        onChange={(newValue) => formik.setFieldValue('depositDate', newValue)}
                         slotProps={{ 
                           textField: { 
                             fullWidth: true,
                             error: formik.touched.depositDate && Boolean(formik.errors.depositDate),
-                            helperText: formik.touched.depositDate && formik.errors.depositDate,
+                            helperText: formik.touched.depositDate && formik.errors.depositDate ? String(formik.errors.depositDate) : '',
                           } 
                         }}
                       />

@@ -38,11 +38,11 @@ INSTALLED_APPS = [
     'django_filters',
     
     # Local apps
-    'common',
-    'accounts',
-    'journals',
-    'ledger',
-    'reports',
+    'accounting_service.common',
+    'accounting_service.accounts',
+    'accounting_service.journals',
+    'accounting_service.ledger',
+    'accounting_service.reports',
 ]
 
 MIDDLEWARE = [
@@ -156,7 +156,7 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer' if DEBUG else 'rest_framework.renderers.JSONRenderer',
     ),
-    'EXCEPTION_HANDLER': 'common.exceptions.custom_exception_handler',
+    'EXCEPTION_HANDLER': 'accounting_service.common.exceptions.custom_exception_handler',
 }
 
 # JWT settings

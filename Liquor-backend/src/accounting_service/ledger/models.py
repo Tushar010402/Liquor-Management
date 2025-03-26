@@ -2,8 +2,8 @@ import uuid
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from common.models import TenantAwareModel, ShopAwareModel
-from accounts.models import Account, FiscalYear, AccountingPeriod
-from journals.models import Journal, JournalEntry
+from accounting_service.accounts.models import Account, FiscalYear, AccountingPeriod
+from accounting_service.journals.models import Journal, JournalEntry
 
 
 class GeneralLedger(TenantAwareModel):

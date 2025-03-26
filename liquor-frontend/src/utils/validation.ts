@@ -179,10 +179,10 @@ export const createSaleValidationSchema = () => {
     discount: Yup.number().min(0, 'Discount must be positive or zero').nullable(),
     tax: Yup.number().min(0, 'Tax must be positive or zero').nullable(),
     payment_method: requiredStringSchema,
-    payment_details: Yup.mixed().when('payment_method', {
-      is: (value: string) => value !== 'cash',
-      then: Yup.object().required('Payment details are required'),
-      otherwise: Yup.mixed().nullable(),
+    payment_details: Yup.mixed().when(['payment_method'], {
+      is: (payment_method: string) => payment_method !== 'cash',
+      then: () => Yup.object().required('Payment details are required'),
+      otherwise: () => Yup.mixed().nullable(),
     }),
     status: requiredStringSchema,
     notes: optionalStringSchema,
@@ -237,10 +237,10 @@ export const createExpenseValidationSchema = () => {
     category: requiredStringSchema,
     amount: amountSchema,
     payment_method: requiredStringSchema,
-    payment_details: Yup.mixed().when('payment_method', {
-      is: (value: string) => value !== 'cash',
-      then: Yup.object().required('Payment details are required'),
-      otherwise: Yup.mixed().nullable(),
+    payment_details: Yup.mixed().when('payment_method', ([value]) => {
+      return value !== 'cash' 
+        ? Yup.object().required('Payment details are required')
+        : Yup.mixed().nullable();
     }),
     recipient: requiredStringSchema,
     receipt_number: optionalStringSchema,
@@ -263,6 +263,18 @@ export const createDepositValidationSchema = () => {
     notes: optionalStringSchema,
   });
 };
+
+// For batch sale validation
+export const batchSaleValidationSchema = Yup.object().shape({
+  // ... other fields
+  payment_method: requiredStringSchema,
+  payment_details: Yup.mixed().when('payment_method', ([value]) => {
+    return value !== 'cash' 
+      ? Yup.object().required('Payment details are required')
+      : Yup.mixed().nullable();
+  }),
+  // ... other fields
+});
 
 export default {
   emailSchema,
@@ -289,4 +301,5 @@ export default {
   createStockReturnValidationSchema,
   createExpenseValidationSchema,
   createDepositValidationSchema,
+  batchSaleValidationSchema,
 };

@@ -2,8 +2,8 @@ import uuid
 from decimal import Decimal
 from django.test import TestCase
 from django.utils import timezone
-from sales_service.returns.models import Return, ReturnItem, ReturnExchange
-from sales_service.sales.models import Sale, SaleItem
+from returns.models import Return, ReturnItem, ReturnExchange
+from sales.models import Sale, SaleItem
 
 class ReturnModelsTest(TestCase):
     """

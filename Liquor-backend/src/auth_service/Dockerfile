@@ -14,17 +14,18 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
-COPY requirements.txt /app/
+COPY src/auth_service/requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy project
-COPY ./src/auth_service /app/
+# Note: In development with docker-compose, this will be mounted as a volume
+COPY src/auth_service/ /app/
 
-# Run migrations and collect static files at build time
-RUN python manage.py collectstatic --noinput
+# Create logs directory
+RUN mkdir -p /app/logs
 
 # Expose port
 EXPOSE 8000
 
-# Run gunicorn
+# Run gunicorn in production, development uses override in docker-compose
 CMD ["gunicorn", "auth_service.wsgi:application", "--bind", "0.0.0.0:8000"]

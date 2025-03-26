@@ -76,7 +76,8 @@ api.interceptors.response.use(
           break;
         default:
           // Other errors
-          const errorMessage = response.data?.message || 'An error occurred';
+          const responseData = response.data as { message?: string };
+          const errorMessage = responseData?.message || 'An error occurred';
           store.dispatch(
             addNotification({
               message: errorMessage,

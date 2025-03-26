@@ -3,7 +3,7 @@ from django.apps import AppConfig
 
 class ReturnsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'returns'
+    name = 'sales_service.returns'
     
     def ready(self):
-        import returns.signals
+        import sales_service.returns.signals

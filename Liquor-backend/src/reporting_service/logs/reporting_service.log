@@ -1,0 +1,14 @@
+INFO 2025-03-26 10:33:29,311 autoreload 12 139072434027392 Watching for file changes with StatReloader
+INFO 2025-03-26 10:35:18,627 autoreload 12 139072434027392 /app/src/reporting_service/reporting_service/__init__.py changed, reloading.
+INFO 2025-03-26 10:35:20,883 autoreload 14 123309637376896 Watching for file changes with StatReloader
+INFO 2025-03-26 10:39:46,873 autoreload 13 126580009921408 Watching for file changes with StatReloader
+INFO 2025-03-26 10:44:13,168 autoreload 13 123882105584512 Watching for file changes with StatReloader
+INFO 2025-03-26 10:46:33,573 autoreload 13 123882105584512 /app/src/reporting_service/reporting_service/__init__.py changed, reloading.
+INFO 2025-03-26 10:46:36,011 autoreload 15 135727351495552 Watching for file changes with StatReloader
+INFO 2025-03-26 10:51:08,202 autoreload 13 124975193074560 Watching for file changes with StatReloader
+INFO 2025-03-26 11:11:11,087 autoreload 432 138115441499008 Watching for file changes with StatReloader
+INFO 2025-03-26 13:14:37,335 autoreload 432 127147850333056 Watching for file changes with StatReloader
+INFO 2025-03-26 16:29:17,211 autoreload 432 133455788202880 Watching for file changes with StatReloader
+INFO 2025-03-26 16:53:36,156 autoreload 433 133974276713344 Watching for file changes with StatReloader
+INFO 2025-03-26 17:01:58,385 autoreload 493 128352328207232 Watching for file changes with StatReloader
+INFO 2025-03-26 17:04:43,370 autoreload 493 132288292727680 Watching for file changes with StatReloader

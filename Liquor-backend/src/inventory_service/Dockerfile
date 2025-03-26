@@ -14,11 +14,14 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
-COPY requirements.txt /app/
+COPY src/inventory_service/requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy project
 COPY ./src/inventory_service /app/
+
+# Create logs directory
+RUN mkdir -p logs
 
 # Run migrations and collect static files at build time
 RUN python manage.py collectstatic --noinput

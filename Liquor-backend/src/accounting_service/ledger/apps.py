@@ -3,7 +3,7 @@ from django.apps import AppConfig
 
 class LedgerConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'ledger'
+    name = 'accounting_service.ledger'
     
     def ready(self):
-        import ledger.signals
+        import accounting_service.ledger.signals

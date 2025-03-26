@@ -78,12 +78,12 @@ export const searchByMultiple = <T>(array: T[], keys: (keyof T)[], searchTerm: s
 };
 
 /**
- * Remove duplicates from an array
- * @param array Array to deduplicate
- * @returns Deduplicated array
+ * Get unique items from array
+ * @param array Array to get unique items from
+ * @returns Array with unique items
  */
 export const unique = <T>(array: T[]): T[] => {
-  return [...new Set(array)];
+  return Array.from(new Set(array));
 };
 
 /**

@@ -1,0 +1,22 @@
+INFO 2025-03-26 09:14:21,885 autoreload 407987 140109471541056 Watching for file changes with StatReloader
+INFO 2025-03-26 09:24:46,528 autoreload 407987 140109471541056 /home/tusharlinux/Documents/LiquorManagement-including-inventory-management/Liquor-backend/src/purchase_service/purchase_service/settings.py changed, reloading.
+INFO 2025-03-26 09:24:46,968 autoreload 420966 125398091437888 Watching for file changes with StatReloader
+INFO 2025-03-26 10:22:35,595 autoreload 13 136758030150528 Watching for file changes with StatReloader
+INFO 2025-03-26 10:25:00,325 autoreload 13 131275909340032 Watching for file changes with StatReloader
+INFO 2025-03-26 10:27:16,944 autoreload 12 127015940524928 Watching for file changes with StatReloader
+INFO 2025-03-26 10:29:55,535 autoreload 12 127015940524928 /app/src/purchase_service/purchase_service/settings.py changed, reloading.
+INFO 2025-03-26 10:29:57,057 autoreload 14 136192876931968 Watching for file changes with StatReloader
+INFO 2025-03-26 10:33:30,086 autoreload 13 129822667791232 Watching for file changes with StatReloader
+INFO 2025-03-26 10:35:18,265 autoreload 13 129822667791232 /app/src/purchase_service/purchase_service/__init__.py changed, reloading.
+INFO 2025-03-26 10:35:20,526 autoreload 15 136867731028864 Watching for file changes with StatReloader
+INFO 2025-03-26 10:39:46,804 autoreload 13 129427422915456 Watching for file changes with StatReloader
+INFO 2025-03-26 10:44:13,000 autoreload 13 127582467361664 Watching for file changes with StatReloader
+INFO 2025-03-26 10:46:33,448 autoreload 13 127582467361664 /app/src/purchase_service/purchase_service/__init__.py changed, reloading.
+INFO 2025-03-26 10:46:35,994 autoreload 15 131181362555776 Watching for file changes with StatReloader
+INFO 2025-03-26 10:51:08,778 autoreload 13 132805932059520 Watching for file changes with StatReloader
+INFO 2025-03-26 11:11:10,862 autoreload 432 132397487147904 Watching for file changes with StatReloader
+INFO 2025-03-26 13:14:37,387 autoreload 433 126133698698112 Watching for file changes with StatReloader
+INFO 2025-03-26 16:29:17,520 autoreload 433 137627801955200 Watching for file changes with StatReloader
+INFO 2025-03-26 16:53:36,460 autoreload 433 130411564444544 Watching for file changes with StatReloader
+INFO 2025-03-26 17:01:57,888 autoreload 493 133549231250304 Watching for file changes with StatReloader
+INFO 2025-03-26 17:04:43,428 autoreload 493 130127160720256 Watching for file changes with StatReloader

@@ -27,6 +27,18 @@ const darkTheme = createTheme({
     },
     primary: primaryColor,
     secondary: secondaryColor,
+    tertiary: {
+      main: '#9c27b0',
+      light: '#ba68c8',
+      dark: '#7b1fa2',
+      contrastText: '#ffffff',
+    },
+    neutral: {
+      main: '#424242',
+      light: '#525252',
+      dark: '#323232',
+      contrastText: '#ffffff',
+    },
     text: {
       primary: '#ffffff',
       secondary: 'rgba(255, 255, 255, 0.7)',
@@ -66,7 +78,7 @@ const darkTheme = createTheme({
       contrastText: '#ffffff',
     },
   },
-  shadows: createShadows('dark'),
+  shadows: createShadows('dark') as ["none", string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string],
   components: {
     ...baseThemeOptions.components,
     MuiAppBar: {

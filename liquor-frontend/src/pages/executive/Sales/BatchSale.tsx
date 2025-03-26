@@ -28,6 +28,7 @@ import {
   Autocomplete,
   Chip,
   Alert,
+  SelectChangeEvent,
 } from '@mui/material';
 import {
   Add as AddIcon,
@@ -156,11 +157,10 @@ const BatchSale: React.FC = () => {
     }
   };
 
-  const handlePaymentMethodChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    const value = event.target.value as string;
-    setPaymentMethod(value);
+  const handlePaymentMethodChange = (event: SelectChangeEvent) => {
+    setPaymentMethod(event.target.value);
     
-    if (value === 'mixed') {
+    if (event.target.value === 'mixed') {
       setMixedPaymentDialogOpen(true);
       // Initialize mixed payment with total amount in cash
       setCashAmount(total);

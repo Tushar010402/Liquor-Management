@@ -4,8 +4,45 @@ from django.conf import settings
 from rest_framework import authentication
 from rest_framework.exceptions import AuthenticationFailed
 import logging
+from datetime import datetime, timedelta
+import uuid
 
 logger = logging.getLogger(__name__)
+
+# JWT configuration
+JWT_SECRET_KEY = getattr(settings, 'JWT_SECRET_KEY', 'your-secret-key')  # In production, this should be stored securely
+JWT_ALGORITHM = getattr(settings, 'JWT_ALGORITHM', 'HS256')
+JWT_EXPIRATION_DELTA = getattr(settings, 'JWT_EXPIRATION_DELTA', 3600)  # 1 hour
+
+def generate_jwt_token(user_id, tenant_id, shop_id=None, role='user'):
+    """
+    Generate a JWT token for the given user.
+    """
+    payload = {
+        'user_id': str(user_id),
+        'tenant_id': str(tenant_id),
+        'exp': datetime.utcnow() + timedelta(seconds=JWT_EXPIRATION_DELTA),
+        'iat': datetime.utcnow(),
+        'jti': str(uuid.uuid4())
+    }
+    
+    if shop_id:
+        payload['shop_id'] = str(shop_id)
+    
+    payload['role'] = role
+    
+    return jwt.encode(payload, JWT_SECRET_KEY, algorithm=JWT_ALGORITHM)
+
+def decode_jwt_token(token):
+    """
+    Decode a JWT token and return the payload.
+    """
+    try:
+        return jwt.decode(token, JWT_SECRET_KEY, algorithms=[JWT_ALGORITHM])
+    except jwt.ExpiredSignatureError:
+        raise ValueError('Token has expired')
+    except jwt.InvalidTokenError:
+        raise ValueError('Invalid token')
 
 class MicroserviceUser:
     """

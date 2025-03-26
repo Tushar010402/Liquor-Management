@@ -1,0 +1,45 @@
+# Django and DRF
+Django==4.2.10
+djangorestframework==3.14.0
+djangorestframework-simplejwt==5.3.1
+django-cors-headers==4.3.1
+django-environ==0.11.2
+django-filter==23.5
+
+# Database
+psycopg2-binary==2.9.9
+dj-database-url==2.1.0
+
+# Caching
+redis==5.0.1
+django-redis==5.4.0
+
+# Message Queue
+kafka-python==2.0.2
+confluent-kafka==2.3.0
+
+# API Documentation
+drf-yasg==1.21.7
+
+# Testing
+pytest==8.0.0
+pytest-django==4.8.0
+pytest-cov==4.1.0
+factory-boy==3.3.0
+faker==22.6.0
+
+# Development
+black==24.1.1
+flake8==7.0.0
+isort==5.13.2
+mypy==1.8.0
+
+# Utilities
+python-dateutil==2.8.2
+pytz==2024.1
+requests==2.31.0
+setuptools==69.1.0
+python-dotenv==1.0.1
+
+# Image Processing
+Pillow==10.2.0 

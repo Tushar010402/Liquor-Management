@@ -1,0 +1,49 @@
+INFO 2025-03-21 09:02:30,972 autoreload 10 132258043444096 Watching for file changes with StatReloader
+INFO 2025-03-21 09:08:22,719 autoreload 10 128002983742336 Watching for file changes with StatReloader
+INFO 2025-03-21 09:12:31,622 autoreload 10 134486187584384 Watching for file changes with StatReloader
+WARNING 2025-03-21 09:21:34,062 log 10 134486062794432 Not Found: /
+WARNING 2025-03-21 09:21:34,062 basehttp 10 134486062794432 "GET / HTTP/1.1" 404 3104
+WARNING 2025-03-21 09:21:34,081 log 10 134486062794432 Not Found: /favicon.ico
+WARNING 2025-03-21 09:21:34,082 basehttp 10 134486062794432 "GET /favicon.ico HTTP/1.1" 404 3155
+INFO 2025-03-21 09:21:45,710 basehttp 10 134486062794432 "GET /swagger HTTP/1.1" 301 0
+INFO 2025-03-21 09:21:45,724 basehttp 10 134486062794432 "GET /swagger/ HTTP/1.1" 200 2188
+INFO 2025-03-21 09:21:45,756 basehttp 10 134486062794432 "GET /static/drf-yasg/style.css HTTP/1.1" 200 1047
+INFO 2025-03-21 09:21:45,757 basehttp 10 134485949548224 "GET /static/drf-yasg/insQ.min.js HTTP/1.1" 200 2093
+INFO 2025-03-21 09:21:45,760 basehttp 10 134485949548224 "GET /static/drf-yasg/swagger-ui-init.js HTTP/1.1" 200 14964
+INFO 2025-03-21 09:21:45,761 basehttp 10 134485939062464 "GET /static/drf-yasg/immutable.min.js HTTP/1.1" 200 56904
+INFO 2025-03-21 09:21:45,761 basehttp 10 134486052308672 "GET /static/drf-yasg/swagger-ui-dist/swagger-ui.css HTTP/1.1" 200 145206
+INFO 2025-03-21 09:21:45,762 basehttp 10 134485960033984 "GET /static/drf-yasg/swagger-ui-dist/swagger-ui-standalone-preset.js HTTP/1.1" 200 322863
+INFO 2025-03-21 09:21:45,764 basehttp 10 134486041822912 "GET /static/drf-yasg/swagger-ui-dist/swagger-ui-bundle.js HTTP/1.1" 200 1046583
+INFO 2025-03-21 09:21:45,907 basehttp 10 134486041822912 "GET /static/drf-yasg/swagger-ui-dist/favicon-32x32.png HTTP/1.1" 200 628
+ERROR 2025-03-21 09:21:45,960 log 10 134486041822912 Internal Server Error: /swagger/
+ERROR 2025-03-21 09:21:45,960 basehttp 10 134486041822912 "GET /swagger/?format=openapi HTTP/1.1" 500 123
+INFO 2025-03-21 09:22:02,428 basehttp 10 134486041822912 "GET /swagger/ HTTP/1.1" 200 2188
+ERROR 2025-03-21 09:22:02,614 log 10 134486041822912 Internal Server Error: /swagger/
+ERROR 2025-03-21 09:22:02,614 basehttp 10 134486041822912 "GET /swagger/?format=openapi HTTP/1.1" 500 123
+WARNING 2025-03-21 09:22:05,691 log 10 134486041822912 Not Found: /
+WARNING 2025-03-21 09:22:05,692 basehttp 10 134486041822912 "GET / HTTP/1.1" 404 3104
+INFO 2025-03-26 08:23:12,946 autoreload 358540 131264079923008 Watching for file changes with StatReloader
+INFO 2025-03-26 08:50:13,241 autoreload 17 125130695195520 Watching for file changes with StatReloader
+INFO 2025-03-26 09:03:47,330 autoreload 25 139407501499264 Watching for file changes with StatReloader
+INFO 2025-03-26 09:06:46,072 autoreload 17 125615059348352 Watching for file changes with StatReloader
+INFO 2025-03-26 09:09:41,548 autoreload 17 127767713569664 Watching for file changes with StatReloader
+INFO 2025-03-26 09:14:10,023 autoreload 407569 128040643782464 Watching for file changes with StatReloader
+INFO 2025-03-26 10:22:35,787 autoreload 13 123742884346752 Watching for file changes with StatReloader
+INFO 2025-03-26 10:25:00,581 autoreload 13 126912975203200 Watching for file changes with StatReloader
+INFO 2025-03-26 10:27:17,735 autoreload 13 127622135110528 Watching for file changes with StatReloader
+INFO 2025-03-26 10:29:21,969 autoreload 13 127622135110528 /app/src/core_service/core_service/settings.py changed, reloading.
+INFO 2025-03-26 10:29:23,382 autoreload 15 137003277085568 Watching for file changes with StatReloader
+INFO 2025-03-26 10:33:29,146 autoreload 13 128273404701568 Watching for file changes with StatReloader
+INFO 2025-03-26 10:35:18,557 autoreload 13 128273404701568 /app/src/core_service/core_service/__init__.py changed, reloading.
+INFO 2025-03-26 10:35:20,846 autoreload 15 137053587364736 Watching for file changes with StatReloader
+INFO 2025-03-26 10:39:46,784 autoreload 13 123376543075200 Watching for file changes with StatReloader
+INFO 2025-03-26 10:44:13,494 autoreload 12 139931100265344 Watching for file changes with StatReloader
+INFO 2025-03-26 10:46:33,767 autoreload 12 139931100265344 /app/src/core_service/core_service/__init__.py changed, reloading.
+INFO 2025-03-26 10:46:36,013 autoreload 14 135428732128128 Watching for file changes with StatReloader
+INFO 2025-03-26 10:51:08,430 autoreload 13 140196142148480 Watching for file changes with StatReloader
+INFO 2025-03-26 11:11:10,934 autoreload 432 128526949550976 Watching for file changes with StatReloader
+INFO 2025-03-26 13:14:37,521 autoreload 432 136224855300992 Watching for file changes with StatReloader
+INFO 2025-03-26 16:29:17,507 autoreload 432 133185027808128 Watching for file changes with StatReloader
+INFO 2025-03-26 16:53:35,998 autoreload 433 136102053968768 Watching for file changes with StatReloader
+INFO 2025-03-26 17:01:58,080 autoreload 493 129751712840576 Watching for file changes with StatReloader
+INFO 2025-03-26 17:04:43,365 autoreload 493 129878825339776 Watching for file changes with StatReloader

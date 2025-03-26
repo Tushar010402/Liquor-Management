@@ -22,7 +22,7 @@ import {
   LocalShipping as SupplierIcon,
   Receipt as SalesIcon,
   AssignmentReturn as ReturnIcon,
-  MonetizationOn as CashIcon,
+  MonetizationOn,
   Assessment as ReportIcon,
   Settings as SettingsIcon,
   ExpandLess,
@@ -44,7 +44,7 @@ import {
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import useAuth from '../../hooks/useAuth';
-import { UserRole } from '../../contexts/AuthContext';
+import { UserRole } from '../../types/auth';
 
 interface MenuItem {
   title: string;
@@ -462,12 +462,12 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose, variant }) => {
               {
                 title: 'Pending Deposits',
                 path: '/manager/pending-deposits',
-                icon: <CashIcon />,
+                icon: <MonetizationOn />,
               },
               {
                 title: 'Pending Expenses',
                 path: '/manager/pending-expenses',
-                icon: <CashIcon />,
+                icon: <MonetizationOn />,
               },
               {
                 title: 'Financial Reconciliation',
@@ -688,27 +688,27 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose, variant }) => {
           },
           {
             title: 'Cash Management',
-            icon: <CashIcon />,
+            icon: <MonetizationOn />,
             children: [
               {
                 title: 'Cash Balance',
                 path: '/executive/cash-balance',
-                icon: <CashIcon />,
+                icon: <MonetizationOn />,
               },
               {
                 title: 'Record Bank Deposit',
                 path: '/executive/record-deposit',
-                icon: <CashIcon />,
+                icon: <MonetizationOn />,
               },
               {
                 title: 'Record Expense',
                 path: '/executive/record-expense',
-                icon: <CashIcon />,
+                icon: <MonetizationOn />,
               },
               {
                 title: 'Cash History',
                 path: '/executive/cash-history',
-                icon: <CashIcon />,
+                icon: <MonetizationOn />,
               },
             ],
           },
@@ -724,7 +724,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose, variant }) => {
               {
                 title: 'Payment Breakdown',
                 path: '/executive/payment-breakdown',
-                icon: <CashIcon />,
+                icon: <MonetizationOn />,
               },
               {
                 title: 'Brand-wise Sales',

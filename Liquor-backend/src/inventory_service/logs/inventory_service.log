@@ -1,0 +1,31 @@
+INFO 2025-03-21 09:02:31,335 autoreload 10 128133761239936 Watching for file changes with StatReloader
+INFO 2025-03-21 09:08:23,264 autoreload 9 135251147770752 Watching for file changes with StatReloader
+INFO 2025-03-21 09:12:31,903 autoreload 10 127895487159168 Watching for file changes with StatReloader
+WARNING 2025-03-21 09:22:13,817 log 10 127895364175552 Not Found: /
+WARNING 2025-03-21 09:22:13,818 basehttp 10 127895364175552 "GET / HTTP/1.1" 404 3247
+WARNING 2025-03-21 09:22:13,841 log 10 127895364175552 Not Found: /favicon.ico
+WARNING 2025-03-21 09:22:13,841 basehttp 10 127895364175552 "GET /favicon.ico HTTP/1.1" 404 3298
+WARNING 2025-03-21 09:22:29,248 log 10 127895364175552 Not Found: /
+WARNING 2025-03-21 09:22:29,249 basehttp 10 127895364175552 "GET / HTTP/1.1" 404 3247
+INFO 2025-03-26 09:14:15,869 autoreload 407775 135413196916544 Watching for file changes with StatReloader
+INFO 2025-03-26 09:24:30,503 autoreload 407775 135413196916544 /home/tusharlinux/Documents/LiquorManagement-including-inventory-management/Liquor-backend/src/inventory_service/inventory_service/settings.py changed, reloading.
+INFO 2025-03-26 09:24:30,974 autoreload 420640 124604340180800 Watching for file changes with StatReloader
+INFO 2025-03-26 10:22:35,513 autoreload 13 133969888594816 Watching for file changes with StatReloader
+INFO 2025-03-26 10:25:00,335 autoreload 13 137681912417152 Watching for file changes with StatReloader
+INFO 2025-03-26 10:27:17,433 autoreload 13 137018022411136 Watching for file changes with StatReloader
+INFO 2025-03-26 10:28:06,203 autoreload 13 137018022411136 /app/src/inventory_service/inventory_service/settings.py changed, reloading.
+INFO 2025-03-26 10:28:07,536 autoreload 15 123422423796608 Watching for file changes with StatReloader
+INFO 2025-03-26 10:33:29,718 autoreload 13 130794880658304 Watching for file changes with StatReloader
+INFO 2025-03-26 10:35:18,756 autoreload 13 130794880658304 /app/src/inventory_service/inventory_service/__init__.py changed, reloading.
+INFO 2025-03-26 10:35:20,773 autoreload 15 124688595676032 Watching for file changes with StatReloader
+INFO 2025-03-26 10:39:46,588 autoreload 13 130989485976448 Watching for file changes with StatReloader
+INFO 2025-03-26 10:44:12,690 autoreload 13 126649422867328 Watching for file changes with StatReloader
+INFO 2025-03-26 10:46:33,184 autoreload 13 126649422867328 /app/src/inventory_service/inventory_service/__init__.py changed, reloading.
+INFO 2025-03-26 10:46:35,555 autoreload 15 124992757640064 Watching for file changes with StatReloader
+INFO 2025-03-26 10:51:08,349 autoreload 14 138702623808384 Watching for file changes with StatReloader
+INFO 2025-03-26 11:11:11,034 autoreload 432 136768159452032 Watching for file changes with StatReloader
+INFO 2025-03-26 13:14:37,439 autoreload 433 133212310289280 Watching for file changes with StatReloader
+INFO 2025-03-26 16:29:17,322 autoreload 433 136841082211200 Watching for file changes with StatReloader
+INFO 2025-03-26 16:53:34,939 autoreload 433 132003573697408 Watching for file changes with StatReloader
+INFO 2025-03-26 17:01:57,863 autoreload 493 128944454564736 Watching for file changes with StatReloader
+INFO 2025-03-26 17:04:43,429 autoreload 493 138507698314112 Watching for file changes with StatReloader

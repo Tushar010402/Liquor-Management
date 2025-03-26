@@ -38,10 +38,10 @@ INSTALLED_APPS = [
     'django_filters',
     
     # Local apps
-    'common',
-    'purchase_orders',
-    'goods_receipt',
-    'suppliers',
+    'purchase_service.common',
+    'purchase_service.purchase_orders',
+    'purchase_service.goods_receipt',
+    'purchase_service.suppliers',
 ]
 
 MIDDLEWARE = [
@@ -155,7 +155,7 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer' if DEBUG else 'rest_framework.renderers.JSONRenderer',
     ),
-    'EXCEPTION_HANDLER': 'common.exceptions.custom_exception_handler',
+    'EXCEPTION_HANDLER': 'purchase_service.common.exceptions.custom_exception_handler',
 }
 
 # JWT settings
